@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Draft Assistant</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-2: #1e222b;
+    --line: #2a2f3a;
+    --text: #e8eaed;
+    --dim: #9aa1ae;
+    --accent: #4ea1ff;
+    --good: #46c88a;
+    --warn: #f5a623;
+    --bad: #ff6b6b;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(15,17,21,.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .pick-meta { font-size: 15px; color: var(--dim); }
+  .pick-meta strong { color: var(--text); font-size: 19px; }
+  .turn {
+    margin-left: auto;
+    padding: 8px 16px; border-radius: 999px;
+    font-weight: 650; font-size: 15px;
+    background: var(--panel-2); color: var(--dim);
+    border: 1px solid var(--line);
+  }
+  .turn.now { background: var(--good); color: #06210f; border-color: transparent; animation: pulse 1.6s ease-in-out infinite; }
+  .turn.soon { background: var(--warn); color: #2a1a00; border-color: transparent; }
+  @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .72 } }
+
+  main { padding: 16px; max-width: 1400px; margin: 0 auto; }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 900px) { .grid { grid-template-columns: 1.9fr 1fr; } }
+
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .card h2 {
+    margin: 0; padding: 12px 16px; font-size: 13px; letter-spacing: .09em;
+    text-transform: uppercase; color: var(--dim); border-bottom: 1px solid var(--line);
+    font-weight: 600;
+  }
+  .card .body { padding: 12px 16px; }
+
+  .note { padding: 10px 16px; font-size: 15px; border-bottom: 1px solid var(--line); }
+  .note.watch { color: var(--warn); background: rgba(245,166,35,.07); }
+  .note.read { color: var(--dim); }
+
+  ol.recs { list-style: none; margin: 0; padding: 0; counter-reset: r; }
+  ol.recs li {
+    counter-increment: r; display: grid; grid-template-columns: 40px 1fr;
+    gap: 14px; padding: 14px 16px; border-bottom: 1px solid var(--line);
+  }
+  ol.recs li:last-child { border-bottom: 0; }
+  ol.recs li::before {
+    content: counter(r); font-variant-numeric: tabular-nums;
+    font-weight: 700; font-size: 20px; color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+  }
+  ol.recs li:first-child { background: rgba(78,161,255,.06); }
+  .who { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .who .name { font-size: 19px; font-weight: 650; }
+  .pos {
+    font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 6px;
+    background: var(--panel-2); color: var(--dim); letter-spacing: .04em;
+  }
+  .pos.RB { background: #1d3a2a; color: #6ee7a8; }
+  .pos.WR { background: #1b3350; color: #74b6ff; }
+  .pos.TE { background: #3d2f14; color: #f0c46b; }
+  .pos.QB { background: #3a1f30; color: #ff9ec4; }
+  .why { margin-top: 5px; font-size: 15px; }
+  .meta2 { margin-top: 6px; font-size: 13.5px; color: var(--dim); display: grid; gap: 3px; }
+  .meta2 .ceil::before { content: "↑ "; color: var(--good); }
+  .meta2 .risk::before { content: "△ "; color: var(--bad); }
+
+  .roster-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+  .roster-row:last-child { border-bottom: 0; }
+  .roster-row .rp { color: var(--dim); font-size: 13px; }
+  .counts { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+  .chip { padding: 5px 11px; border-radius: 8px; background: var(--panel-2); font-size: 14px; }
+  .chip.need { background: rgba(255,107,107,.15); color: #ffb3b3; }
+
+  label { display: block; font-size: 13px; color: var(--dim); margin: 12px 0 5px; }
+  select, input, button {
+    font: inherit; color: var(--text); background: var(--panel-2);
+    border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; width: 100%;
+  }
+  button { cursor: pointer; font-weight: 600; }
+  button.primary { background: var(--accent); color: #04182e; border-color: transparent; }
+  button:active { opacity: .8; }
+  .row { display: flex; gap: 8px; }
+  .row > * { flex: 1; }
+
+  .status { font-size: 13px; color: var(--dim); padding: 10px 16px; border-top: 1px solid var(--line); }
+  .status .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; background: var(--bad); }
+  .status .dot.ok { background: var(--good); }
+  .banner { padding: 12px 16px; border-radius: var(--radius); margin-bottom: 16px; font-size: 15px; }
+  .banner.warn { background: rgba(245,166,35,.12); border: 1px solid rgba(245,166,35,.35); color: #ffd591; }
+  .banner.err { background: rgba(255,107,107,.12); border: 1px solid rgba(255,107,107,.35); color: #ffb3b3; }
+  .empty { padding: 24px 16px; color: var(--dim); text-align: center; }
+  datalist { display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="pick-meta">
+    Pick <strong id="pickNo">—</strong> · Round <strong id="roundNo">—</strong>
+  </div>
+  <div class="pick-meta">Slot <strong id="slotNo">—</strong></div>
+  <div class="turn" id="turn">Waiting…</div>
+</header>
+
+<main>
+  <div id="banners"></div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Recommendations</h2>
+      <div class="note read" id="rosterRead" hidden></div>
+      <div class="note watch" id="watch" hidden></div>
+      <ol class="recs" id="recs"></ol>
+      <div class="empty" id="recsEmpty">Waiting for draft data…</div>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <h2>My Roster</h2>
+        <div class="body">
+          <div class="counts" id="counts"></div>
+          <div id="roster"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <h2>Setup</h2>
+        <div class="body">
+          <label for="slotSel">Draft slot (set once the order is drawn)</label>
+          <select id="slotSel"><option value="">Not set</option></select>
+
+          <label for="teamSel">My Yahoo team</label>
+          <select id="teamSel"><option value="">Loading…</option></select>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <h2>Mark Drafted</h2>
+        <div class="body">
+          <label for="manual">Use when Yahoo's feed lags and you know someone is gone</label>
+          <input id="manual" list="playerList" placeholder="Type a player name…" autocomplete="off">
+          <datalist id="playerList"></datalist>
+          <div class="row" style="margin-top:8px">
+            <button class="primary" id="markBtn">Mark drafted</button>
+            <button id="refreshBtn">Recompute</button>
+          </div>
+          <div id="manualMsg" style="font-size:13.5px;color:var(--dim);margin-top:8px"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Recent Picks</h2>
+        <div class="body" id="recent" style="font-size:14.5px;color:var(--dim)">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="status">
+      <span class="dot" id="dot"></span><span id="statusText">Connecting…</span>
+      <span id="usage" style="float:right"></span>
+    </div>
+  </div>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+let lastPick = -1;
+
+function banner(msg, kind) {
+  const d = document.createElement('div');
+  d.className = 'banner ' + kind;
+  d.textContent = msg;
+  $('banners').appendChild(d);
+}
+
+async function loadTeams() {
+  try {
+    const teams = await (await fetch('/api/teams')).json();
+    if (!Array.isArray(teams)) return;
+    $('teamSel').innerHTML = '<option value="">Not set</option>' +
+      teams.map(t => `<option value="${t.team_key}">${t.name || t.team_key}</option>`).join('');
+  } catch { $('teamSel').innerHTML = '<option value="">Unavailable</option>'; }
+}
+
+async function loadBoard() {
+  try {
+    const board = await (await fetch('/api/board')).json();
+    $('playerList').innerHTML = board.filter(p => !p.drafted)
+      .map(p => `<option value="${p.name}">`).join('');
+  } catch {}
+}
+
+function renderRecs(rec, watchShown) {
+  const ol = $('recs'), empty = $('recsEmpty');
+  if (!rec || !rec.recommendations || !rec.recommendations.length) {
+    ol.innerHTML = '';
+    empty.hidden = false;
+    // If the reason is already displayed in the watch note, don't repeat it here.
+    empty.textContent = watchShown ? 'No recommendations available.' : 'Waiting for draft data…';
+    return;
+  }
+  empty.hidden = true;
+  ol.innerHTML = rec.recommendations.map(r => `
+    <li>
+      <div>
+        <div class="who">
+          <span class="name">${r.name}</span>
+          <span class="pos ${r.position}">${r.position}</span>
+          <span class="pos">${r.team}</span>
+        </div>
+        <div class="why">${r.why}</div>
+        <div class="meta2">
+          <div class="ceil">${r.ceiling_case}</div>
+          <div class="risk">${r.risk}</div>
+        </div>
+      </div>
+    </li>`).join('');
+}
+
+async function tick() {
+  let s;
+  try {
+    s = await (await fetch('/api/status')).json();
+  } catch {
+    $('dot').className = 'dot';
+    $('statusText').textContent = 'Cannot reach server';
+    return;
+  }
+
+  $('banners').innerHTML = '';
+  if (s.mock_mode) banner('MOCK MODE — simulated draft, not live Yahoo data.', 'warn');
+  if (s.config_missing && s.config_missing.length)
+    banner('Missing config: ' + s.config_missing.join(', ') + ' — see README.', 'err');
+  if (s.poll_error) banner('Poll error: ' + s.poll_error, 'err');
+
+  const d = s.draft;
+  $('pickNo').textContent = d.next_pick;
+  $('roundNo').textContent = d.current_round;
+  $('slotNo').textContent = d.slot ?? '—';
+
+  const t = $('turn');
+  if (d.slot == null) { t.className = 'turn'; t.textContent = 'Set your slot'; }
+  else if (d.is_my_turn) { t.className = 'turn now'; t.textContent = "YOU'RE UP"; }
+  else if (d.picks_until_my_turn != null && d.picks_until_my_turn <= 3) {
+    t.className = 'turn soon'; t.textContent = `${d.picks_until_my_turn} picks away`;
+  } else if (d.picks_until_my_turn != null) {
+    t.className = 'turn'; t.textContent = `${d.picks_until_my_turn} picks away`;
+  } else { t.className = 'turn'; t.textContent = 'Draft complete'; }
+
+  const counts = s.position_counts || {}, unmet = s.unmet_starters || {};
+  $('counts').innerHTML = ['QB','RB','WR','TE']
+    .map(p => `<span class="chip ${unmet[p] ? 'need' : ''}">${p} ${counts[p] || 0}${unmet[p] ? ` (need ${unmet[p]})` : ''}</span>`)
+    .join('');
+
+  $('roster').innerHTML = (s.roster && s.roster.length)
+    ? s.roster.map(p => `<div class="roster-row"><span>${p.name}</span><span class="rp">${p.position} · ${p.team}</span></div>`).join('')
+    : '<div class="rp" style="color:var(--dim)">No picks yet</div>';
+
+  $('recent').innerHTML = (s.recent_picks && s.recent_picks.length)
+    ? s.recent_picks.slice().reverse().map(p => `${p.pick}. ${p.name} <span style="opacity:.6">(${p.position})</span>`).join('<br>')
+    : '—';
+
+  // Reflect server-side state in the controls, so a reload doesn't look unconfigured.
+  if (d.slot != null && $('slotSel').value !== String(d.slot)) $('slotSel').value = String(d.slot);
+  if (d.my_team_key && $('teamSel').value !== d.my_team_key) $('teamSel').value = d.my_team_key;
+
+  const rec = s.recommendations;
+  $('rosterRead').hidden = !(rec && rec.roster_read);
+  if (rec && rec.roster_read) $('rosterRead').textContent = rec.roster_read;
+  const watchShown = !!(rec && rec.positional_watch);
+  $('watch').hidden = !watchShown;
+  if (watchShown) $('watch').textContent = rec.positional_watch;
+  renderRecs(rec, watchShown);
+
+  $('dot').className = 'dot' + (s.connected ? ' ok' : '');
+  $('statusText').textContent = s.connected
+    ? `Connected · ${d.picks_made} picks tracked`
+    : 'Not connected to draft feed';
+
+  if (rec && rec.usage) {
+    const u = rec.usage;
+    $('usage').textContent = `cache ${u.cache_read || 0} · out ${u.output_tokens || 0}`;
+  }
+
+  if (d.picks_made !== lastPick) { lastPick = d.picks_made; loadBoard(); }
+}
+
+$('slotSel').innerHTML = '<option value="">Not set</option>' +
+  Array.from({length: 10}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('');
+
+$('slotSel').onchange = async e => {
+  if (!e.target.value) return;
+  await fetch('/api/slot/' + e.target.value, {method: 'POST'});
+  tick();
+};
+$('teamSel').onchange = async e => {
+  if (!e.target.value) return;
+  await fetch('/api/team/' + encodeURIComponent(e.target.value), {method: 'POST'});
+  tick();
+};
+$('markBtn').onclick = async () => {
+  const name = $('manual').value.trim();
+  if (!name) return;
+  const r = await fetch('/api/manual-pick/' + encodeURIComponent(name), {method: 'POST'});
+  const j = await r.json();
+  $('manualMsg').textContent = j.error ? j.error : `Marked ${j.marked || name} drafted`;
+  $('manual').value = '';
+  tick();
+};
+$('refreshBtn').onclick = async () => {
+  $('manualMsg').textContent = 'Recomputing…';
+  await fetch('/api/refresh', {method: 'POST'});
+  $('manualMsg').textContent = '';
+  tick();
+};
+
+loadTeams();
+loadBoard();
+tick();
+setInterval(tick, 4000);
+</script>
+</body>
+</html>

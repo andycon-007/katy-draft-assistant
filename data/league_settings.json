@@ -1,0 +1,179 @@
+{
+  "meta": {
+    "source": "User-provided Yahoo league settings, 2026-08-14",
+    "verify_via_api": "Confirm all of this from the Yahoo API once OAuth is live. Hand-entered settings are the likeliest silent source of bad recommendations.",
+    "scoring_format": "STANDARD (non-PPR)",
+    "scoring_format_basis": "No 'Reception' line item appears in the scoring table. Receiving Yards and Receiving TDs are present; points-per-reception is absent, i.e. 0.",
+    "confirm_this": "If Yahoo actually shows a Reception value > 0, the rankings board must be rebuilt — standard vs PPR materially reorders WR and pass-catching RB."
+  },
+
+  "roster": {
+    "starters": ["QB", "WR", "WR", "RB", "RB", "TE", "W/R/T", "K", "DEF"],
+    "bench": 7,
+    "ir": 1,
+    "total_draftable": 16,
+    "starter_count": 9,
+    "notes": "Only 2 dedicated WR slots and 2 RB slots plus a single W/R/T flex. Shallow starting requirements relative to a 3-WR league — depth at WR is worth less than usual."
+  },
+
+  "scoring": {
+    "passing": {
+      "yards_per_point": 25,
+      "touchdown": 4,
+      "interception": -1
+    },
+    "rushing": {
+      "yards_per_point": 10,
+      "touchdown": 6
+    },
+    "receiving": {
+      "reception": 0,
+      "yards_per_point": 10,
+      "touchdown": 6
+    },
+    "misc": {
+      "return_touchdown": 6,
+      "two_point_conversion": 2,
+      "fumble_lost": -2,
+      "offensive_fumble_return_td": 6
+    },
+    "kicking": {
+      "fg_0_19": 3,
+      "fg_20_29": 3,
+      "fg_30_39": 3,
+      "fg_40_49": 4,
+      "fg_50_plus": 5,
+      "pat": 1
+    },
+    "defense": {
+      "sack": 1,
+      "interception": 2,
+      "fumble_recovery": 2,
+      "touchdown": 6,
+      "safety": 2,
+      "block_kick": 2,
+      "return_touchdown": 6,
+      "extra_point_returned": 2,
+      "points_allowed_0": 10,
+      "points_allowed_1_6": 7,
+      "points_allowed_7_13": 4,
+      "points_allowed_14_20": 1,
+      "points_allowed_21_27": 0,
+      "points_allowed_28_34": -1,
+      "points_allowed_35_plus": -4
+    },
+    "fractional_points": true,
+    "negative_points": true
+  },
+
+  "league_identity": {
+    "league_id": 878541,
+    "league_name": "Tigers of Katy Baseball",
+    "scoring_type": "Head-to-Head",
+    "start_scoring_week": 1,
+    "max_teams": 12,
+    "teams_in_2025": 10,
+    "team_count_2026": "UNCONFIRMED — max is 12, but 10 played in 2025. Confirm before draft day; it changes snake math and how fast the board drains.",
+    "auto_renew": true,
+    "cash_league": false
+  },
+
+  "draft": {
+    "type_shown_in_settings": "Offline Draft",
+    "type_actual_2026": "LIVE (confirmed by user)",
+    "scheduled": false,
+    "style": "Snake",
+    "rounds": 16,
+    "explanation": "The 'Offline Draft' value is stale — it carried over from 2025 via auto-renew and the 2026 draft has not been scheduled yet. Once the commissioner schedules it, Draft Type should read 'Live Standard Draft'.",
+    "corroborating_evidence": "User plans to switch to autodraft after 10-15 picks. Autodraft only exists in live online drafts, which supports the live reading.",
+    "implication": "Yahoo's draft-results endpoint populates pick-by-pick in real time during a live draft. Polling it every 5-10s gives exact draft state with zero manual entry. This is the primary data path.",
+    "action_required": {
+      "who": "Commissioner",
+      "what": "Schedule the 2026 draft in Yahoo so Draft Type flips to Live Standard Draft.",
+      "why_it_matters_beyond_this_app": "If the setting is still 'Offline Draft' on draft night, Yahoo hosts no draft room at all and nobody can join. This is a league-wide risk independent of this tool.",
+      "verify_before_draft_day": "Confirm Draft Type reads 'Live Standard Draft' and a draft date/time is set."
+    },
+    "fallback_plan": "Keep the static ranked-candidate plan as a backup. If the draft-results feed is unavailable or the setting never flips, the static plan works with zero dependencies."
+  },
+
+  "league_structure": {
+    "playoff_teams": 8,
+    "playoff_weeks": [15, 16, 17],
+    "playoff_reseeding": false,
+    "playoff_tiebreaker": "Higher seed wins",
+    "divisions": false,
+    "play_against_median": false,
+    "second_opponent": false,
+    "lock_eliminated_teams": false
+  },
+
+  "history_2025": {
+    "teams": 10,
+    "playoff_teams": 8,
+    "observation": "8 of 10 teams made the playoffs — only the bottom two missed. A 5-9 team qualified.",
+    "key_evidence": {
+      "Aussie Rules": {"record": "6-8", "points_for": 1450.78, "final_place": 2, "note": "Losing record, 2nd-highest points scored, finished runner-up."},
+      "San Antonio": {"record": "11-3", "points_for": 1533.24, "final_place": 3, "note": "Best record AND most points scored — still only 3rd."},
+      "Garza's Real Daddy": {"record": "8-6", "points_for": 1269.48, "final_place": 1, "note": "Won the title with the 7th-most points."}
+    },
+    "conclusion": "Regular-season record and weekly consistency were nearly irrelevant to the final outcome. The champion scored fewer points than six other teams. This is a variance-dominated league where the only thing that matters is being alive and hot in weeks 15-17."
+  },
+
+  "transactions": {
+    "max_acquisitions_season": null,
+    "max_acquisitions_week": null,
+    "max_trades": null,
+    "trade_end_date": "2026-11-28",
+    "draft_pick_trades": false,
+    "trade_review": "League Votes",
+    "trade_reject_time_days": 2,
+    "waiver_time_days": 2,
+    "waiver_type": "Continual rolling list",
+    "weekly_waivers": "Game Time - Tuesday",
+    "injured_to_ir_from_waivers": true,
+    "post_draft_players": "Follow Waiver Rules"
+  },
+
+  "strategic_implications": [
+    {
+      "finding": "Standard scoring, not PPR",
+      "impact": "HIGH",
+      "detail": "Volume rushers and touchdown-dependent players gain substantially. Slot receivers and pass-catching backs whose value is reception-driven lose the most. This reorders the board meaningfully, not marginally."
+    },
+    {
+      "finding": "Offline draft — no live Yahoo feed",
+      "impact": "ARCHITECTURE_BREAKING",
+      "detail": "Yahoo will not expose picks in real time. Draft state has to come from manual entry at the party. This is the single most important constraint on the system design."
+    },
+    {
+      "finding": "8 playoff teams out of 10-12",
+      "impact": "HIGH",
+      "detail": "67-80% of the field makes the playoffs, and 2025 proved it empirically: a 6-8 team finished runner-up, while the 11-3 team that led the league in scoring finished 3rd, and the champion ranked 7th in points scored. A high-floor, consistency-oriented roster is worth very little here. Draft for ceiling and league-winning upside — the objective is peaking in weeks 15-17, not accumulating regular-season wins."
+    },
+    {
+      "finding": "Only 2 WR + 1 flex, 2 RB",
+      "impact": "MEDIUM",
+      "detail": "Shallow starting lineup requirements. Fewer WRs needed than a typical 3-WR league, which softens WR scarcity and makes elite RB and TE relatively more valuable."
+    },
+    {
+      "finding": "Unlimited acquisitions, continual rolling waivers",
+      "impact": "MEDIUM",
+      "detail": "Streaming is free and unconstrained all season. Late-round K and DEF are near-worthless draft capital — they can be churned weekly. Do not spend real picks there. Reinforces taking upside swings with bench spots."
+    },
+    {
+      "finding": "Passing TD = 4, 25 yards/point",
+      "impact": "MEDIUM",
+      "detail": "Standard, non-premium QB scoring with only one QB slot. QBs should go late relative to their raw point totals. Rushing quarterbacks retain an edge because rushing TDs are worth 6."
+    },
+    {
+      "finding": "Fumbles lost = -2, interceptions = -1",
+      "impact": "LOW",
+      "detail": "Negative scoring is live but mild. Not a reason to downgrade high-volume players."
+    },
+    {
+      "finding": "No draft pick trades",
+      "impact": "NONE_DRAFT_DAY",
+      "detail": "Draft order is fixed once set. No in-draft trading to model."
+    }
+  ]
+}

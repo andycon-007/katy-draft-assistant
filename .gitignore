@@ -1,0 +1,20 @@
+# Secrets — never commit
+.env
+.env.local
+*.token.json
+yahoo_token.json
+tokens/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# OS
+.DS_Store
+
+# Local working data
+data/cache/
+*.log
