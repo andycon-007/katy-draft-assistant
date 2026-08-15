@@ -201,7 +201,14 @@ class Recommender:
         self.settings = settings
         self.rankings = rankings
         self.league = league
-        self.client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
+        # Pass the key only if we actually have one. Otherwise let the SDK resolve
+        # credentials itself (ANTHROPIC_API_KEY in the shell, an `ant auth login`
+        # profile, etc.) — that way the key never has to be written to a file.
+        self.client = (
+            anthropic.Anthropic(api_key=settings.anthropic_api_key)
+            if settings.anthropic_api_key
+            else anthropic.Anthropic()
+        )
         self._system = build_system_prompt(rankings, league)
 
     def recommend(

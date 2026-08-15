@@ -18,3 +18,6 @@ venv/
 # Local working data
 data/cache/
 *.log
+
+# Generated output (regenerate with scripts/generate_plan.py)
+draft_plan.html
