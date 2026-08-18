@@ -144,11 +144,21 @@ class DraftState:
         return 0.6
 
 
+def is_out_for_season(player: dict) -> bool:
+    return (player.get("injury") or {}).get("status") == "out_for_season"
+
+
 def available_players(rankings: dict, state: DraftState) -> list[dict]:
-    """Board players not yet drafted, in board order."""
+    """Board players not yet drafted, in board order.
+
+    Season-ending injuries are filtered here rather than merely rank-penalised —
+    recommending a player who will not take a snap is worse than any ordering error.
+    """
     taken = state.drafted_keys
     return [
-        p for p in rankings["players"] if normalize_name(p["name"]) not in taken
+        p
+        for p in rankings["players"]
+        if normalize_name(p["name"]) not in taken and not is_out_for_season(p)
     ]
 
 

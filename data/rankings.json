@@ -1,35 +1,94 @@
 {
   "meta": {
     "built_on": "2026-08-14",
-    "revised_on": "2026-08-14",
+    "revised_on": "2026-08-15",
     "season": 2026,
     "league": "Tigers of Katy Baseball (Yahoo #878541)",
     "format_basis": "STANDARD (non-PPR), 10-team, 1-QB",
     "revision_note": "REBUILT from a PPR basis after league settings confirmed zero points per reception. The prior PPR ordering was the wrong basis and has been replaced.",
-    "coverage": "Top 100 — covers cleanly through your ~10th pick in a 10-team draft. See PROVENANCE for the remaining gap.",
+    "coverage": "200 players \u2014 covers all 16 rounds of a 10-team draft",
     "source_ordering": "Bleacher Report Top 100 PPR (2026), reordered here for standard scoring",
     "reorder_is_derived": true,
     "reorder_note": "The standard-scoring adjustments below are MY derivation, not a sourced standard board. One anchor is external: nflfantasyedge reports Gibbs at #1 and Robinson at #2 in both Half-PPR and Standard. Everything else follows from removing PPR leverage. Treat the direction of each move as sound and the exact magnitude as approximate.",
     "bye_weeks_partial": true,
     "bye_week_note": "18 of 32 teams verified. Backfill the rest from the Yahoo API.",
-
     "standard_scoring_adjustments": {
       "principle": "With 0 PPR, value shifts to yardage volume and touchdowns. Players whose fantasy production is reception-count-driven lose the most; touchdown-dependent and high-volume rushers gain.",
       "notable_risers": [
-        {"player": "Derrick Henry", "ppr_rank": 30, "std_rank": 14, "why": "Pure rushing volume and touchdowns with no receiving drag. The single biggest beneficiary on this board."},
-        {"player": "Quinshon Judkins", "ppr_rank": 58, "std_rank": 33, "why": "Early-down and goal-line role; his value never depended on catches."},
-        {"player": "David Montgomery", "ppr_rank": 56, "std_rank": 35, "why": "Touchdown-dependent grinder — exactly the profile standard scoring rewards."},
-        {"player": "Mike Evans", "ppr_rank": 48, "std_rank": 29, "why": "Big-bodied red-zone target; scores on volume of touchdowns, not receptions."},
-        {"player": "Josh Jacobs", "ppr_rank": 50, "std_rank": 39, "why": "Workhorse rushing volume plus goal-line work."},
-        {"player": "Kyren Williams", "ppr_rank": 36, "std_rank": 24, "why": "Goal-line role is the whole thesis, and it survives intact without PPR."}
+        {
+          "player": "Derrick Henry",
+          "ppr_rank": 30,
+          "std_rank": 14,
+          "why": "Pure rushing volume and touchdowns with no receiving drag. The single biggest beneficiary on this board."
+        },
+        {
+          "player": "Quinshon Judkins",
+          "ppr_rank": 58,
+          "std_rank": 33,
+          "why": "Early-down and goal-line role; his value never depended on catches."
+        },
+        {
+          "player": "David Montgomery",
+          "ppr_rank": 56,
+          "std_rank": 35,
+          "why": "Touchdown-dependent grinder \u2014 exactly the profile standard scoring rewards."
+        },
+        {
+          "player": "Mike Evans",
+          "ppr_rank": 48,
+          "std_rank": 29,
+          "why": "Big-bodied red-zone target; scores on volume of touchdowns, not receptions."
+        },
+        {
+          "player": "Josh Jacobs",
+          "ppr_rank": 50,
+          "std_rank": 39,
+          "why": "Workhorse rushing volume plus goal-line work."
+        },
+        {
+          "player": "Kyren Williams",
+          "ppr_rank": 36,
+          "std_rank": 24,
+          "why": "Goal-line role is the whole thesis, and it survives intact without PPR."
+        }
       ],
       "notable_fallers": [
-        {"player": "De'Von Achane", "ppr_rank": 11, "std_rank": 16, "why": "A large share of his projection is reception volume, which is now worth nothing."},
-        {"player": "Ladd McConkey", "ppr_rank": 42, "std_rank": 53, "why": "Slot profile — high catch count, modest yards per catch."},
-        {"player": "Wan'Dale Robinson", "ppr_rank": 91, "std_rank": 100, "why": "Close to a pure PPR asset. Minimal standalone value in this format."},
-        {"player": "Chris Godwin Jr.", "ppr_rank": 83, "std_rank": 88, "why": "Slot-heavy usage loses its scoring engine."},
-        {"player": "Amon-Ra St. Brown", "ppr_rank": 8, "std_rank": 9, "why": "Still elite on yardage and targets, but the reception-volume edge that made him a top-8 PPR pick is gone."},
-        {"player": "Trey McBride", "ppr_rank": 17, "std_rank": 21, "why": "Tight ends generally lose the most from removing PPR, since receptions are a large share of their scoring."}
+        {
+          "player": "De'Von Achane",
+          "ppr_rank": 11,
+          "std_rank": 16,
+          "why": "A large share of his projection is reception volume, which is now worth nothing."
+        },
+        {
+          "player": "Ladd McConkey",
+          "ppr_rank": 42,
+          "std_rank": 53,
+          "why": "Slot profile \u2014 high catch count, modest yards per catch."
+        },
+        {
+          "player": "Wan'Dale Robinson",
+          "ppr_rank": 91,
+          "std_rank": 100,
+          "why": "Close to a pure PPR asset. Minimal standalone value in this format."
+        },
+        {
+          "player": "Chris Godwin Jr.",
+          "ppr_rank": 83,
+          "std_rank": 88,
+          "why": "Slot-heavy usage loses its scoring engine."
+        },
+        {
+          "player": "Amon-Ra St. Brown",
+          "ppr_rank": 8,
+          "std_rank": 9,
+          "why": "Still elite on yardage and targets, but the reception-volume edge that made him a top-8 PPR pick is gone."
+        },
+        {
+          "player": "Trey McBride",
+          "ppr_rank": 17,
+          "std_rank": 21,
+          "why": "Tight ends generally lose the most from removing PPR, since receptions are a large share of their scoring."
+        }
       ],
       "position_level_effects": {
         "TE": "Loses the most as a position group. McBride and Bowers remain the clear top two, but the gap between them and streaming tight ends narrows.",
@@ -38,143 +97,3359 @@
         "QB": "Unchanged in relative terms. Standard 4-point passing TDs and one QB slot mean QBs should go later than raw point totals suggest. Rushing QBs keep an edge because rushing TDs are worth 6."
       }
     },
-
     "league_specific_strategy": {
       "draft_for_ceiling": "8 of 10 teams make the playoffs. In 2025 the champion ranked 7th in points scored, a 6-8 team finished runner-up, and the 11-3 scoring leader finished 3rd. Weekly consistency has almost no value. Prioritize league-winning upside over safe floors.",
       "shallow_lineup": "Only QB/WR/WR/RB/RB/TE/FLEX/K/DEF start. Fewer WRs needed than a typical 3-WR league, which softens WR scarcity and raises the relative value of elite RB and TE.",
-      "stream_k_and_def": "Unlimited acquisitions with continual rolling waivers means kickers and defenses are freely replaceable weekly. Spend zero meaningful draft capital on them — this board deliberately excludes them.",
+      "stream_k_and_def": "Unlimited acquisitions with continual rolling waivers means kickers and defenses are freely replaceable weekly. Spend zero meaningful draft capital on them \u2014 this board deliberately excludes them.",
       "autodraft_plan": "You intend to take picks 1-15 manually then autodraft the remainder. Rounds 15-16 are K/DEF territory anyway, so this costs you very little."
+    },
+    "build": {
+      "method": "Blended consensus: mean of available source ranks, then additive injury penalties.",
+      "sources": {
+        "br_standard": "Bleacher Report top 100 PPR, converted to standard scoring",
+        "rotoworld": "NBC Sports / Rotoworld \u2014 2026 Fantasy Football Top 200 Overall (published 2026-08-15)",
+        "injuries": "Camp injury status as of 2026-08-15"
+      },
+      "excluded_out_for_season": [],
+      "caveats": [
+        "Two sources is enough to cancel single-outlet outliers, not enough to be a true consensus.",
+        "Players ranked past ~100 come from the Rotoworld list only, which is PPR-leaning \u2014 their standard-scoring correction is weaker than the top of the board.",
+        "Injury penalties are fixed rank shifts encoding added risk, not projections.",
+        "Kickers and defenses are deliberately excluded; unlimited waivers make them streamable."
+      ]
     }
   },
-
   "bye_weeks": {
-    "KC": 5, "DET": 6, "CIN": 6, "MIN": 6, "MIA": 6,
-    "BUF": 7, "LAC": 7, "SF": 8, "HOU": 8, "PHI": 10,
-    "LAR": 11, "ATL": 11, "SEA": 11, "NE": 11,
-    "IND": 13, "LV": 13, "DAL": 14, "ARI": 14,
-    "BAL": null, "CHI": null, "CLE": null, "DEN": null,
-    "GB": null, "JAX": null, "NO": null, "NYG": null,
-    "NYJ": null, "PIT": null, "TEN": null, "WAS": null,
-    "CAR": null, "TB": null
+    "KC": 5,
+    "DET": 6,
+    "CIN": 6,
+    "MIN": 6,
+    "MIA": 6,
+    "BUF": 7,
+    "LAC": 7,
+    "SF": 8,
+    "HOU": 8,
+    "PHI": 10,
+    "LAR": 11,
+    "ATL": 11,
+    "SEA": 11,
+    "NE": 11,
+    "IND": 13,
+    "LV": 13,
+    "DAL": 14,
+    "ARI": 14,
+    "BAL": null,
+    "CHI": null,
+    "CLE": null,
+    "DEN": null,
+    "GB": null,
+    "JAX": null,
+    "NO": null,
+    "NYG": null,
+    "NYJ": null,
+    "PIT": null,
+    "TEN": null,
+    "WAS": null,
+    "CAR": null,
+    "TB": null
   },
-
   "tiers": {
-    "1": "1.01 candidates — genuinely interchangeable",
-    "2": "Elite anchors",
-    "3": "High-end starters with league-winning ceilings",
-    "4": "Strong RB2 / elite-TE inflection point",
-    "5": "Solid starters; first QB worth considering",
-    "6": "Back-end starters with real upside",
-    "7": "Flex-plus; QB2 tier begins",
-    "8": "High-variance starters — ceiling intact",
-    "9": "Committee backs and volume-dependent receivers",
-    "10": "Upside swings; breakout candidates",
-    "11": "Flex fillers",
-    "12": "Bench depth with standalone value",
-    "13": "Late-round dart throws",
-    "14": "Deep bench / handcuff / stash"
+    "1": "Tier 1",
+    "2": "Tier 2",
+    "3": "Tier 3",
+    "4": "Tier 4",
+    "5": "Tier 5",
+    "6": "Tier 6",
+    "7": "Tier 7",
+    "8": "Tier 8",
+    "9": "Tier 9",
+    "10": "Tier 10",
+    "11": "Tier 11",
+    "12": "Tier 12",
+    "13": "Tier 13",
+    "14": "Tier 14",
+    "15": "Tier 15",
+    "16": "Tier 16",
+    "17": "Tier 17",
+    "18": "Tier 18",
+    "19": "Tier 19",
+    "20": "Tier 20",
+    "21": "Tier 21"
   },
-
   "players": [
-    {"rank": 1,  "name": "Jahmyr Gibbs",        "pos": "RB", "team": "DET", "bye": 6,    "tier": 1, "ppr_rank": 1,  "note": "Externally sourced as #1 in both Half-PPR and Standard. Volume rises with Montgomery gone."},
-    {"rank": 2,  "name": "Bijan Robinson",      "pos": "RB", "team": "ATL", "bye": 11,   "tier": 1, "ppr_rank": 4,  "note": "Sourced #2 in standard. Rises here relative to the PPR board."},
-    {"rank": 3,  "name": "Ja'Marr Chase",       "pos": "WR", "team": "CIN", "bye": 6,    "tier": 1, "ppr_rank": 3},
-    {"rank": 4,  "name": "Puka Nacua",          "pos": "WR", "team": "LAR", "bye": 11,   "tier": 1, "ppr_rank": 5},
-    {"rank": 5,  "name": "Jaxon Smith-Njigba",  "pos": "WR", "team": "SEA", "bye": 11,   "tier": 1, "ppr_rank": 2,  "note": "Widest source disagreement on the board — BR had him #2, others notably lower. Rank is soft."},
-    {"rank": 6,  "name": "Justin Jefferson",    "pos": "WR", "team": "MIN", "bye": 6,    "tier": 2, "ppr_rank": 6},
-    {"rank": 7,  "name": "Jonathan Taylor",     "pos": "RB", "team": "IND", "bye": 13,   "tier": 2, "ppr_rank": 7,  "note": "Pure volume rusher — profile ages well in standard."},
-    {"rank": 8,  "name": "CeeDee Lamb",         "pos": "WR", "team": "DAL", "bye": 14,   "tier": 2, "ppr_rank": 10},
-    {"rank": 9,  "name": "Amon-Ra St. Brown",   "pos": "WR", "team": "DET", "bye": 6,    "tier": 2, "ppr_rank": 8,  "note": "Slips slightly — reception volume no longer pays. Shares a bye with Gibbs."},
-    {"rank": 10, "name": "James Cook III",      "pos": "RB", "team": "BUF", "bye": 7,    "tier": 2, "ppr_rank": 9},
-    {"rank": 11, "name": "Ashton Jeanty",       "pos": "RB", "team": "LV",  "bye": 13,   "tier": 3, "ppr_rank": 14},
-    {"rank": 12, "name": "Nico Collins",        "pos": "WR", "team": "HOU", "bye": 8,    "tier": 3, "ppr_rank": 12},
-    {"rank": 13, "name": "A.J. Brown",          "pos": "WR", "team": "NE",  "bye": 11,   "tier": 3, "ppr_rank": 13, "note": "New team — usage projection carries more uncertainty than usual."},
-    {"rank": 14, "name": "Derrick Henry",       "pos": "RB", "team": "BAL", "bye": null, "tier": 3, "ppr_rank": 30, "note": "Biggest riser on the board. Rushing volume and touchdowns with zero PPR drag."},
-    {"rank": 15, "name": "George Pickens",      "pos": "WR", "team": "DAL", "bye": 14,   "tier": 3, "ppr_rank": 15},
-    {"rank": 16, "name": "De'Von Achane",       "pos": "RB", "team": "MIA", "bye": 6,    "tier": 3, "ppr_rank": 11, "note": "Falls — much of his projection was reception-driven."},
-    {"rank": 17, "name": "Emeka Egbuka",        "pos": "WR", "team": "TB",  "bye": null, "tier": 3, "ppr_rank": 16},
-    {"rank": 18, "name": "Christian McCaffrey", "pos": "RB", "team": "SF",  "bye": 8,    "tier": 3, "ppr_rank": 24},
-    {"rank": 19, "name": "Omarion Hampton",     "pos": "RB", "team": "LAC", "bye": 7,    "tier": 4, "ppr_rank": 18},
-    {"rank": 20, "name": "Saquon Barkley",      "pos": "RB", "team": "PHI", "bye": 10,   "tier": 4, "ppr_rank": 21},
-    {"rank": 21, "name": "Trey McBride",        "pos": "TE", "team": "ARI", "bye": 14,   "tier": 4, "ppr_rank": 17, "note": "Still the clear TE1, but tight ends lose the most without PPR."},
-    {"rank": 22, "name": "Drake London",        "pos": "WR", "team": "ATL", "bye": 11,   "tier": 4, "ppr_rank": 20},
-    {"rank": 23, "name": "Chris Olave",         "pos": "WR", "team": "NO",  "bye": null, "tier": 4, "ppr_rank": 19},
-    {"rank": 24, "name": "Kyren Williams",      "pos": "RB", "team": "LAR", "bye": 11,   "tier": 4, "ppr_rank": 36, "note": "Riser — goal-line role is the thesis and it survives without PPR."},
-    {"rank": 25, "name": "DeVonta Smith",       "pos": "WR", "team": "PHI", "bye": 10,   "tier": 4, "ppr_rank": 22},
-    {"rank": 26, "name": "Brock Bowers",        "pos": "TE", "team": "LV",  "bye": 13,   "tier": 4, "ppr_rank": 23, "note": "After McBride and Bowers there is a real cliff at tight end."},
-    {"rank": 27, "name": "Josh Allen",          "pos": "QB", "team": "BUF", "bye": 7,    "tier": 5, "ppr_rank": 25, "note": "Consensus QB1. With one QB slot and 4-point passing TDs, waiting is defensible."},
-    {"rank": 28, "name": "Chase Brown",         "pos": "RB", "team": "CIN", "bye": 6,    "tier": 5, "ppr_rank": 27},
-    {"rank": 29, "name": "Mike Evans",          "pos": "WR", "team": "SF",  "bye": 8,    "tier": 5, "ppr_rank": 48, "note": "Riser — red-zone touchdown profile is ideal for standard. New team."},
-    {"rank": 30, "name": "Zay Flowers",         "pos": "WR", "team": "BAL", "bye": null, "tier": 5, "ppr_rank": 28},
-    {"rank": 31, "name": "Garrett Wilson",      "pos": "WR", "team": "NYJ", "bye": null, "tier": 5, "ppr_rank": 26},
-    {"rank": 32, "name": "Rashee Rice",         "pos": "WR", "team": "KC",  "bye": 5,    "tier": 5, "ppr_rank": 29},
-    {"rank": 33, "name": "Quinshon Judkins",    "pos": "RB", "team": "CLE", "bye": null, "tier": 6, "ppr_rank": 58, "note": "Major riser — early-down and goal-line work never needed catches."},
-    {"rank": 34, "name": "Breece Hall",         "pos": "RB", "team": "NYJ", "bye": null, "tier": 6, "ppr_rank": 34},
-    {"rank": 35, "name": "David Montgomery",    "pos": "RB", "team": "HOU", "bye": 8,    "tier": 6, "ppr_rank": 56, "note": "Major riser — touchdown-dependent grinder. New team."},
-    {"rank": 36, "name": "Lamar Jackson",       "pos": "QB", "team": "BAL", "bye": null, "tier": 6, "ppr_rank": 31, "note": "Rushing TDs at 6 points preserve the edge for mobile QBs."},
-    {"rank": 37, "name": "Joe Burrow",          "pos": "QB", "team": "CIN", "bye": 6,    "tier": 6, "ppr_rank": 32},
-    {"rank": 38, "name": "Tetairoa McMillan",   "pos": "WR", "team": "CAR", "bye": null, "tier": 6, "ppr_rank": 35},
-    {"rank": 39, "name": "Josh Jacobs",         "pos": "RB", "team": "GB",  "bye": null, "tier": 7, "ppr_rank": 50, "note": "Riser — workhorse volume plus goal-line usage."},
-    {"rank": 40, "name": "Colston Loveland",    "pos": "TE", "team": "CHI", "bye": null, "tier": 7, "ppr_rank": 33, "note": "First TE after the cliff; drops with the position."},
-    {"rank": 41, "name": "Kenneth Walker III",  "pos": "RB", "team": "KC",  "bye": 5,    "tier": 7, "ppr_rank": 38, "note": "New team — watch the backfield split through preseason."},
-    {"rank": 42, "name": "Tee Higgins",         "pos": "WR", "team": "CIN", "bye": 6,    "tier": 7, "ppr_rank": 40},
-    {"rank": 43, "name": "Drake Maye",          "pos": "QB", "team": "NE",  "bye": 11,   "tier": 7, "ppr_rank": 39},
-    {"rank": 44, "name": "Javonte Williams",    "pos": "RB", "team": "DAL", "bye": 14,   "tier": 7, "ppr_rank": 41},
-    {"rank": 45, "name": "Jaylen Waddle",       "pos": "WR", "team": "DEN", "bye": null, "tier": 7, "ppr_rank": 37, "note": "New team — role uncertainty."},
-    {"rank": 46, "name": "Jeremiyah Love",      "pos": "RB", "team": "ARI", "bye": 14,   "tier": 8, "ppr_rank": 43},
-    {"rank": 47, "name": "Terry McLaurin",      "pos": "WR", "team": "WAS", "bye": null, "tier": 8, "ppr_rank": 44},
-    {"rank": 48, "name": "Malik Nabers",        "pos": "WR", "team": "NYG", "bye": null, "tier": 8, "ppr_rank": 45},
-    {"rank": 49, "name": "DK Metcalf",          "pos": "WR", "team": "PIT", "bye": null, "tier": 8, "ppr_rank": 68, "note": "Riser — big-play and touchdown profile fits standard."},
-    {"rank": 50, "name": "Brian Thomas Jr.",    "pos": "WR", "team": "JAX", "bye": null, "tier": 8, "ppr_rank": 69, "note": "Riser — downfield scoring rather than catch volume."},
-    {"rank": 51, "name": "Cam Skattebo",        "pos": "RB", "team": "NYG", "bye": null, "tier": 8, "ppr_rank": 47},
-    {"rank": 52, "name": "Davante Adams",       "pos": "WR", "team": "LAR", "bye": 11,   "tier": 8, "ppr_rank": 46},
-    {"rank": 53, "name": "Ladd McConkey",       "pos": "WR", "team": "LAC", "bye": 7,    "tier": 8, "ppr_rank": 42, "note": "Faller — slot profile loses its scoring engine."},
-    {"rank": 54, "name": "Luther Burden III",   "pos": "WR", "team": "CHI", "bye": null, "tier": 9, "ppr_rank": 49},
-    {"rank": 55, "name": "Chuba Hubbard",       "pos": "RB", "team": "CAR", "bye": null, "tier": 9, "ppr_rank": 70, "note": "Riser — early-down volume."},
-    {"rank": 56, "name": "Jameson Williams",    "pos": "WR", "team": "DET", "bye": 6,    "tier": 9, "ppr_rank": 51},
-    {"rank": 57, "name": "Marvin Harrison Jr.", "pos": "WR", "team": "ARI", "bye": 14,   "tier": 9, "ppr_rank": 55},
-    {"rank": 58, "name": "DJ Moore",            "pos": "WR", "team": "BUF", "bye": 7,    "tier": 9, "ppr_rank": 52, "note": "New team."},
-    {"rank": 59, "name": "Courtland Sutton",    "pos": "WR", "team": "DEN", "bye": null, "tier": 9, "ppr_rank": 72, "note": "Riser — red-zone target share."},
-    {"rank": 60, "name": "Travis Etienne Jr.",  "pos": "RB", "team": "NO",  "bye": null, "tier": 9, "ppr_rank": 53, "note": "Faller — receiving work was part of the case. New team."},
-    {"rank": 61, "name": "Jalen Hurts",         "pos": "QB", "team": "PHI", "bye": 10,   "tier": 10, "ppr_rank": 54, "note": "Tush-push rushing touchdowns are worth 6 — holds value well in standard."},
-    {"rank": 62, "name": "Bucky Irving",        "pos": "RB", "team": "TB",  "bye": null, "tier": 10, "ppr_rank": 67, "note": "Flagged externally as a mid-round back who can beat his draft cost."},
-    {"rank": 63, "name": "Tyler Warren",        "pos": "TE", "team": "IND", "bye": 13,   "tier": 10, "ppr_rank": 57},
-    {"rank": 64, "name": "TreVeyon Henderson",  "pos": "RB", "team": "NE",  "bye": 11,   "tier": 10, "ppr_rank": 61},
-    {"rank": 65, "name": "Caleb Williams",      "pos": "QB", "team": "CHI", "bye": null, "tier": 10, "ppr_rank": 59},
-    {"rank": 66, "name": "Rome Odunze",         "pos": "WR", "team": "CHI", "bye": null, "tier": 10, "ppr_rank": 64},
-    {"rank": 67, "name": "Christian Watson",    "pos": "WR", "team": "GB",  "bye": null, "tier": 10, "ppr_rank": 62, "note": "Deep-threat scoring profile holds up without PPR."},
-    {"rank": 68, "name": "Carnell Tate",        "pos": "WR", "team": "TEN", "bye": null, "tier": 10, "ppr_rank": 60},
-    {"rank": 69, "name": "Jayden Daniels",      "pos": "QB", "team": "WAS", "bye": null, "tier": 11, "ppr_rank": 63, "note": "At least one model rates him above consensus ADP. Rushing floor helps."},
-    {"rank": 70, "name": "D'Andre Swift",       "pos": "RB", "team": "CHI", "bye": null, "tier": 11, "ppr_rank": 65, "note": "Slight faller — receiving-back profile."},
-    {"rank": 71, "name": "Tucker Kraft",        "pos": "TE", "team": "GB",  "bye": null, "tier": 11, "ppr_rank": 66},
-    {"rank": 72, "name": "Tony Pollard",        "pos": "RB", "team": "TEN", "bye": null, "tier": 11, "ppr_rank": 73},
-    {"rank": 73, "name": "Rico Dowdle",         "pos": "RB", "team": "PIT", "bye": null, "tier": 11, "ppr_rank": 75},
-    {"rank": 74, "name": "Dak Prescott",        "pos": "QB", "team": "DAL", "bye": 14,   "tier": 11, "ppr_rank": 71},
-    {"rank": 75, "name": "Kyle Pitts Sr.",      "pos": "TE", "team": "ATL", "bye": 11,   "tier": 11, "ppr_rank": 74},
-    {"rank": 76, "name": "Bhayshul Tuten",      "pos": "RB", "team": "JAX", "bye": null, "tier": 12, "ppr_rank": 78},
-    {"rank": 77, "name": "Justin Herbert",      "pos": "QB", "team": "LAC", "bye": 7,    "tier": 12, "ppr_rank": 76},
-    {"rank": 78, "name": "Michael Pittman Jr.", "pos": "WR", "team": "PIT", "bye": null, "tier": 12, "ppr_rank": 77, "note": "New team."},
-    {"rank": 79, "name": "Jadarian Price",      "pos": "RB", "team": "SEA", "bye": 11,   "tier": 12, "ppr_rank": 80},
-    {"rank": 80, "name": "Trevor Lawrence",     "pos": "QB", "team": "JAX", "bye": null, "tier": 12, "ppr_rank": 79},
-    {"rank": 81, "name": "Alec Pierce",         "pos": "WR", "team": "IND", "bye": 13,   "tier": 12, "ppr_rank": 81, "note": "Low-catch, high-yards-per-catch deep threat — one of the few WRs unharmed by losing PPR."},
-    {"rank": 82, "name": "RJ Harvey",           "pos": "RB", "team": "DEN", "bye": null, "tier": 12, "ppr_rank": 86},
-    {"rank": 83, "name": "Travis Kelce",        "pos": "TE", "team": "KC",  "bye": 5,    "tier": 13, "ppr_rank": 85},
-    {"rank": 84, "name": "Michael Wilson",      "pos": "WR", "team": "ARI", "bye": 14,   "tier": 13, "ppr_rank": 84},
-    {"rank": 85, "name": "Jordyn Tyson",        "pos": "WR", "team": "NO",  "bye": null, "tier": 13, "ppr_rank": 88},
-    {"rank": 86, "name": "Harold Fannin Jr.",   "pos": "TE", "team": "CLE", "bye": null, "tier": 13, "ppr_rank": 87},
-    {"rank": 87, "name": "Jaylen Warren",       "pos": "RB", "team": "PIT", "bye": null, "tier": 13, "ppr_rank": 82, "note": "Faller — passing-down role loses most of its value."},
-    {"rank": 88, "name": "Chris Godwin Jr.",    "pos": "WR", "team": "TB",  "bye": null, "tier": 13, "ppr_rank": 83, "note": "Faller — slot usage without PPR."},
-    {"rank": 89, "name": "Rhamondre Stevenson", "pos": "RB", "team": "NE",  "bye": 11,   "tier": 13, "ppr_rank": 93},
-    {"rank": 90, "name": "Aaron Jones Sr.",     "pos": "RB", "team": "MIN", "bye": 6,    "tier": 13, "ppr_rank": 96},
-    {"rank": 91, "name": "Sam LaPorta",         "pos": "TE", "team": "DET", "bye": 6,    "tier": 14, "ppr_rank": 95},
-    {"rank": 92, "name": "Jakobi Meyers",       "pos": "WR", "team": "JAX", "bye": null, "tier": 14, "ppr_rank": 94},
-    {"rank": 93, "name": "Parker Washington",   "pos": "WR", "team": "JAX", "bye": null, "tier": 14, "ppr_rank": 90},
-    {"rank": 94, "name": "Jaxson Dart",         "pos": "QB", "team": "NYG", "bye": null, "tier": 14, "ppr_rank": 92},
-    {"rank": 95, "name": "Makai Lemon",         "pos": "WR", "team": "PHI", "bye": 10,   "tier": 14, "ppr_rank": 97},
-    {"rank": 96, "name": "Isaiah Likely",       "pos": "TE", "team": "NYG", "bye": null, "tier": 14, "ppr_rank": 98},
-    {"rank": 97, "name": "Kenny Gainwell",      "pos": "RB", "team": "TB",  "bye": null, "tier": 14, "ppr_rank": 89, "note": "Faller — receiving-back profile."},
-    {"rank": 98, "name": "Patrick Mahomes II",  "pos": "QB", "team": "KC",  "bye": 5,    "tier": 14, "ppr_rank": 99},
-    {"rank": 99, "name": "J.K. Dobbins",        "pos": "RB", "team": "DEN", "bye": null, "tier": 14, "ppr_rank": 100},
-    {"rank": 100,"name": "Wan'Dale Robinson",   "pos": "WR", "team": "TEN", "bye": null, "tier": 14, "ppr_rank": 91, "note": "Biggest faller — close to a pure PPR asset with little standalone value here."}
+    {
+      "rank": 1,
+      "name": "Jahmyr Gibbs",
+      "pos": "RB",
+      "team": "DET",
+      "bye": 6,
+      "tier": 1,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 1,
+        "rotoworld": 1
+      },
+      "ppr_rank": 1,
+      "note": "Externally sourced as #1 in both Half-PPR and Standard. Volume rises with Montgomery gone."
+    },
+    {
+      "rank": 2,
+      "name": "Bijan Robinson",
+      "pos": "RB",
+      "team": "ATL",
+      "bye": 11,
+      "tier": 1,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 2,
+        "rotoworld": 2
+      },
+      "ppr_rank": 4,
+      "note": "Sourced #2 in standard. Rises here relative to the PPR board."
+    },
+    {
+      "rank": 3,
+      "name": "Ja'Marr Chase",
+      "pos": "WR",
+      "team": "CIN",
+      "bye": 6,
+      "tier": 1,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 3,
+        "rotoworld": 3
+      },
+      "ppr_rank": 3
+    },
+    {
+      "rank": 4,
+      "name": "Jaxon Smith-Njigba",
+      "pos": "WR",
+      "team": "SEA",
+      "bye": 11,
+      "tier": 1,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 5,
+        "rotoworld": 5
+      },
+      "ppr_rank": 2,
+      "note": "Widest source disagreement on the board \u2014 BR had him #2, others notably lower. Rank is soft."
+    },
+    {
+      "rank": 5,
+      "name": "Puka Nacua",
+      "pos": "WR",
+      "team": "LAR",
+      "bye": 11,
+      "tier": 1,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 4,
+        "rotoworld": 4
+      },
+      "ppr_rank": 5,
+      "injury": {
+        "issue": "Groin, minor",
+        "status": "minor",
+        "penalty": 2,
+        "detail": null
+      }
+    },
+    {
+      "rank": 6,
+      "name": "Justin Jefferson",
+      "pos": "WR",
+      "team": "MIN",
+      "bye": 6,
+      "tier": 2,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 6,
+        "rotoworld": 9
+      },
+      "ppr_rank": 6
+    },
+    {
+      "rank": 7,
+      "name": "Jonathan Taylor",
+      "pos": "RB",
+      "team": "IND",
+      "bye": 13,
+      "tier": 2,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 7,
+        "rotoworld": 8
+      },
+      "ppr_rank": 7,
+      "note": "Pure volume rusher \u2014 profile ages well in standard."
+    },
+    {
+      "rank": 8,
+      "name": "Amon-Ra St. Brown",
+      "pos": "WR",
+      "team": "DET",
+      "bye": 6,
+      "tier": 2,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 9,
+        "rotoworld": 7
+      },
+      "ppr_rank": 8,
+      "note": "Slips slightly \u2014 reception volume no longer pays. Shares a bye with Gibbs."
+    },
+    {
+      "rank": 9,
+      "name": "CeeDee Lamb",
+      "pos": "WR",
+      "team": "DAL",
+      "bye": 14,
+      "tier": 2,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 8,
+        "rotoworld": 10
+      },
+      "ppr_rank": 10
+    },
+    {
+      "rank": 10,
+      "name": "James Cook III",
+      "pos": "RB",
+      "team": "BUF",
+      "bye": 7,
+      "tier": 2,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 10,
+        "rotoworld": 11
+      },
+      "ppr_rank": 9
+    },
+    {
+      "rank": 11,
+      "name": "Christian McCaffrey",
+      "pos": "RB",
+      "team": "SF",
+      "bye": 8,
+      "tier": 3,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 18,
+        "rotoworld": 6
+      },
+      "ppr_rank": 24
+    },
+    {
+      "rank": 12,
+      "name": "Ashton Jeanty",
+      "pos": "RB",
+      "team": "LV",
+      "bye": 13,
+      "tier": 3,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 11,
+        "rotoworld": 15
+      },
+      "ppr_rank": 14
+    },
+    {
+      "rank": 13,
+      "name": "Nico Collins",
+      "pos": "WR",
+      "team": "HOU",
+      "bye": 8,
+      "tier": 3,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 12,
+        "rotoworld": 16
+      },
+      "ppr_rank": 12
+    },
+    {
+      "rank": 14,
+      "name": "De'Von Achane",
+      "pos": "RB",
+      "team": "MIA",
+      "bye": 6,
+      "tier": 3,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 16,
+        "rotoworld": 13
+      },
+      "ppr_rank": 11,
+      "note": "Falls \u2014 much of his projection was reception-driven."
+    },
+    {
+      "rank": 15,
+      "name": "Derrick Henry",
+      "pos": "RB",
+      "team": "BAL",
+      "bye": null,
+      "tier": 3,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 14,
+        "rotoworld": 18
+      },
+      "ppr_rank": 30,
+      "note": "Biggest riser on the board. Rushing volume and touchdowns with zero PPR drag."
+    },
+    {
+      "rank": 16,
+      "name": "Saquon Barkley",
+      "pos": "RB",
+      "team": "PHI",
+      "bye": 10,
+      "tier": 3,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 20,
+        "rotoworld": 12
+      },
+      "ppr_rank": 21
+    },
+    {
+      "rank": 17,
+      "name": "A.J. Brown",
+      "pos": "WR",
+      "team": "NE",
+      "bye": 11,
+      "tier": 3,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 13,
+        "rotoworld": 21
+      },
+      "ppr_rank": 13,
+      "note": "New team \u2014 usage projection carries more uncertainty than usual."
+    },
+    {
+      "rank": 18,
+      "name": "Drake London",
+      "pos": "WR",
+      "team": "ATL",
+      "bye": 11,
+      "tier": 3,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 22,
+        "rotoworld": 14
+      },
+      "ppr_rank": 20
+    },
+    {
+      "rank": 19,
+      "name": "George Pickens",
+      "pos": "WR",
+      "team": "DAL",
+      "bye": 14,
+      "tier": 4,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 15,
+        "rotoworld": 24
+      },
+      "ppr_rank": 15
+    },
+    {
+      "rank": 20,
+      "name": "Brock Bowers",
+      "pos": "TE",
+      "team": "LV",
+      "bye": 13,
+      "tier": 4,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 26,
+        "rotoworld": 17
+      },
+      "ppr_rank": 23,
+      "note": "After McBride and Bowers there is a real cliff at tight end."
+    },
+    {
+      "rank": 21,
+      "name": "Omarion Hampton",
+      "pos": "RB",
+      "team": "LAC",
+      "bye": 7,
+      "tier": 4,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 19,
+        "rotoworld": 25
+      },
+      "ppr_rank": 18
+    },
+    {
+      "rank": 22,
+      "name": "Trey McBride",
+      "pos": "TE",
+      "team": "ARI",
+      "bye": 14,
+      "tier": 4,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 21,
+        "rotoworld": 26
+      },
+      "ppr_rank": 17,
+      "note": "Still the clear TE1, but tight ends lose the most without PPR."
+    },
+    {
+      "rank": 23,
+      "name": "Chase Brown",
+      "pos": "RB",
+      "team": "CIN",
+      "bye": 6,
+      "tier": 4,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 28,
+        "rotoworld": 20
+      },
+      "ppr_rank": 27
+    },
+    {
+      "rank": 24,
+      "name": "Kyren Williams",
+      "pos": "RB",
+      "team": "LAR",
+      "bye": 11,
+      "tier": 4,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 24,
+        "rotoworld": 29
+      },
+      "ppr_rank": 36,
+      "note": "Riser \u2014 goal-line role is the thesis and it survives without PPR."
+    },
+    {
+      "rank": 25,
+      "name": "Rashee Rice",
+      "pos": "WR",
+      "team": "KC",
+      "bye": 5,
+      "tier": 4,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 32,
+        "rotoworld": 23
+      },
+      "ppr_rank": 29
+    },
+    {
+      "rank": 26,
+      "name": "Josh Allen",
+      "pos": "QB",
+      "team": "BUF",
+      "bye": 7,
+      "tier": 4,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 27,
+        "rotoworld": 31
+      },
+      "ppr_rank": 25,
+      "note": "Consensus QB1. With one QB slot and 4-point passing TDs, waiting is defensible."
+    },
+    {
+      "rank": 27,
+      "name": "Chris Olave",
+      "pos": "WR",
+      "team": "NO",
+      "bye": null,
+      "tier": 5,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 23,
+        "rotoworld": 37
+      },
+      "ppr_rank": 19
+    },
+    {
+      "rank": 28,
+      "name": "Kenneth Walker III",
+      "pos": "RB",
+      "team": "KC",
+      "bye": 5,
+      "tier": 5,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 41,
+        "rotoworld": 19
+      },
+      "ppr_rank": 38,
+      "note": "New team \u2014 watch the backfield split through preseason."
+    },
+    {
+      "rank": 29,
+      "name": "DeVonta Smith",
+      "pos": "WR",
+      "team": "PHI",
+      "bye": 10,
+      "tier": 5,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 25,
+        "rotoworld": 45
+      },
+      "ppr_rank": 22
+    },
+    {
+      "rank": 30,
+      "name": "Zay Flowers",
+      "pos": "WR",
+      "team": "BAL",
+      "bye": null,
+      "tier": 5,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 30,
+        "rotoworld": 40
+      },
+      "ppr_rank": 28
+    },
+    {
+      "rank": 31,
+      "name": "Tetairoa McMillan",
+      "pos": "WR",
+      "team": "CAR",
+      "bye": null,
+      "tier": 5,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 38,
+        "rotoworld": 34
+      },
+      "ppr_rank": 35
+    },
+    {
+      "rank": 32,
+      "name": "Lamar Jackson",
+      "pos": "QB",
+      "team": "BAL",
+      "bye": null,
+      "tier": 5,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 36,
+        "rotoworld": 39
+      },
+      "ppr_rank": 31,
+      "note": "Rushing TDs at 6 points preserve the edge for mobile QBs."
+    },
+    {
+      "rank": 33,
+      "name": "Colston Loveland",
+      "pos": "TE",
+      "team": "CHI",
+      "bye": null,
+      "tier": 6,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 40,
+        "rotoworld": 35
+      },
+      "ppr_rank": 33,
+      "note": "First TE after the cliff; drops with the position."
+    },
+    {
+      "rank": 34,
+      "name": "Garrett Wilson",
+      "pos": "WR",
+      "team": "NYJ",
+      "bye": null,
+      "tier": 6,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 31,
+        "rotoworld": 46
+      },
+      "ppr_rank": 26
+    },
+    {
+      "rank": 35,
+      "name": "Javonte Williams",
+      "pos": "RB",
+      "team": "DAL",
+      "bye": 14,
+      "tier": 6,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 44,
+        "rotoworld": 33
+      },
+      "ppr_rank": 41
+    },
+    {
+      "rank": 36,
+      "name": "Breece Hall",
+      "pos": "RB",
+      "team": "NYJ",
+      "bye": null,
+      "tier": 6,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 34,
+        "rotoworld": 28
+      },
+      "ppr_rank": 34,
+      "injury": {
+        "issue": "Groin, 2-3 weeks",
+        "status": "short_term_expected_ready",
+        "penalty": 8,
+        "detail": null
+      }
+    },
+    {
+      "rank": 37,
+      "name": "Tee Higgins",
+      "pos": "WR",
+      "team": "CIN",
+      "bye": 6,
+      "tier": 6,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 42,
+        "rotoworld": 36
+      },
+      "ppr_rank": 40
+    },
+    {
+      "rank": 38,
+      "name": "Mike Evans",
+      "pos": "WR",
+      "team": "SF",
+      "bye": 8,
+      "tier": 6,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 29,
+        "rotoworld": 50
+      },
+      "ppr_rank": 48,
+      "note": "Riser \u2014 red-zone touchdown profile is ideal for standard. New team."
+    },
+    {
+      "rank": 39,
+      "name": "David Montgomery",
+      "pos": "RB",
+      "team": "HOU",
+      "bye": 8,
+      "tier": 7,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 35,
+        "rotoworld": 44
+      },
+      "ppr_rank": 56,
+      "note": "Major riser \u2014 touchdown-dependent grinder. New team."
+    },
+    {
+      "rank": 40,
+      "name": "Malik Nabers",
+      "pos": "WR",
+      "team": "NYG",
+      "bye": null,
+      "tier": 7,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 48,
+        "rotoworld": 22
+      },
+      "ppr_rank": 45,
+      "injury": {
+        "issue": "ACL recovery",
+        "status": "recovery_on_track",
+        "penalty": 5,
+        "detail": "Practicing; reported ahead of expectations."
+      }
+    },
+    {
+      "rank": 41,
+      "name": "Quinshon Judkins",
+      "pos": "RB",
+      "team": "CLE",
+      "bye": null,
+      "tier": 7,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 33,
+        "rotoworld": 49
+      },
+      "ppr_rank": 58,
+      "note": "Major riser \u2014 early-down and goal-line work never needed catches."
+    },
+    {
+      "rank": 42,
+      "name": "Emeka Egbuka",
+      "pos": "WR",
+      "team": "TB",
+      "bye": null,
+      "tier": 7,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 17,
+        "rotoworld": 42
+      },
+      "ppr_rank": 16,
+      "injury": {
+        "issue": "Toe",
+        "status": "week_to_week",
+        "penalty": 15,
+        "detail": "Availability genuinely uncertain \u2014 notable at his draft cost."
+      }
+    },
+    {
+      "rank": 43,
+      "name": "Jeremiyah Love",
+      "pos": "RB",
+      "team": "ARI",
+      "bye": 14,
+      "tier": 7,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 46,
+        "rotoworld": 27
+      },
+      "ppr_rank": 43,
+      "injury": {
+        "issue": "High ankle sprain, ~4wk",
+        "status": "short_term_expected_ready",
+        "penalty": 8,
+        "detail": null
+      }
+    },
+    {
+      "rank": 44,
+      "name": "Travis Etienne Jr.",
+      "pos": "RB",
+      "team": "NO",
+      "bye": null,
+      "tier": 7,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 60,
+        "rotoworld": 30
+      },
+      "ppr_rank": 53,
+      "note": "Faller \u2014 receiving work was part of the case. New team."
+    },
+    {
+      "rank": 45,
+      "name": "Joe Burrow",
+      "pos": "QB",
+      "team": "CIN",
+      "bye": 6,
+      "tier": 7,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 37,
+        "rotoworld": 54
+      },
+      "ppr_rank": 32
+    },
+    {
+      "rank": 46,
+      "name": "Cam Skattebo",
+      "pos": "RB",
+      "team": "NYG",
+      "bye": null,
+      "tier": 8,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 51,
+        "rotoworld": 43
+      },
+      "ppr_rank": 47
+    },
+    {
+      "rank": 47,
+      "name": "Ladd McConkey",
+      "pos": "WR",
+      "team": "LAC",
+      "bye": 7,
+      "tier": 8,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 53,
+        "rotoworld": 41
+      },
+      "ppr_rank": 42,
+      "note": "Faller \u2014 slot profile loses its scoring engine."
+    },
+    {
+      "rank": 48,
+      "name": "Jaylen Waddle",
+      "pos": "WR",
+      "team": "DEN",
+      "bye": null,
+      "tier": 8,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 45,
+        "rotoworld": 51
+      },
+      "ppr_rank": 37,
+      "note": "New team \u2014 role uncertainty."
+    },
+    {
+      "rank": 49,
+      "name": "Drake Maye",
+      "pos": "QB",
+      "team": "NE",
+      "bye": 11,
+      "tier": 8,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 43,
+        "rotoworld": 57
+      },
+      "ppr_rank": 39
+    },
+    {
+      "rank": 50,
+      "name": "Bucky Irving",
+      "pos": "RB",
+      "team": "TB",
+      "bye": null,
+      "tier": 8,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 62,
+        "rotoworld": 38
+      },
+      "ppr_rank": 67,
+      "note": "Flagged externally as a mid-round back who can beat his draft cost."
+    },
+    {
+      "rank": 51,
+      "name": "Josh Jacobs",
+      "pos": "RB",
+      "team": "GB",
+      "bye": null,
+      "tier": 8,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 39,
+        "rotoworld": 32
+      },
+      "ppr_rank": 50,
+      "note": "Riser \u2014 workhorse volume plus goal-line usage.",
+      "injury": {
+        "issue": "Groin",
+        "status": "week_to_week",
+        "penalty": 15,
+        "detail": null
+      }
+    },
+    {
+      "rank": 52,
+      "name": "Terry McLaurin",
+      "pos": "WR",
+      "team": "WAS",
+      "bye": null,
+      "tier": 8,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 47,
+        "rotoworld": 58
+      },
+      "ppr_rank": 44
+    },
+    {
+      "rank": 53,
+      "name": "Davante Adams",
+      "pos": "WR",
+      "team": "LAR",
+      "bye": 11,
+      "tier": 8,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 52,
+        "rotoworld": 55
+      },
+      "ppr_rank": 46
+    },
+    {
+      "rank": 54,
+      "name": "Jameson Williams",
+      "pos": "WR",
+      "team": "DET",
+      "bye": 6,
+      "tier": 9,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 56,
+        "rotoworld": 59
+      },
+      "ppr_rank": 51
+    },
+    {
+      "rank": 55,
+      "name": "TreVeyon Henderson",
+      "pos": "RB",
+      "team": "NE",
+      "bye": 11,
+      "tier": 9,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 64,
+        "rotoworld": 53
+      },
+      "ppr_rank": 61
+    },
+    {
+      "rank": 56,
+      "name": "Jayden Daniels",
+      "pos": "QB",
+      "team": "WAS",
+      "bye": null,
+      "tier": 9,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 69,
+        "rotoworld": 48
+      },
+      "ppr_rank": 63,
+      "note": "At least one model rates him above consensus ADP. Rushing floor helps."
+    },
+    {
+      "rank": 57,
+      "name": "D'Andre Swift",
+      "pos": "RB",
+      "team": "CHI",
+      "bye": null,
+      "tier": 9,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 70,
+        "rotoworld": 47
+      },
+      "ppr_rank": 65,
+      "note": "Slight faller \u2014 receiving-back profile."
+    },
+    {
+      "rank": 58,
+      "name": "Brian Thomas Jr.",
+      "pos": "WR",
+      "team": "JAX",
+      "bye": null,
+      "tier": 9,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 50,
+        "rotoworld": 69
+      },
+      "ppr_rank": 69,
+      "note": "Riser \u2014 downfield scoring rather than catch volume."
+    },
+    {
+      "rank": 59,
+      "name": "Tyler Warren",
+      "pos": "TE",
+      "team": "IND",
+      "bye": 13,
+      "tier": 9,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 63,
+        "rotoworld": 60
+      },
+      "ppr_rank": 57
+    },
+    {
+      "rank": 60,
+      "name": "DJ Moore",
+      "pos": "WR",
+      "team": "BUF",
+      "bye": 7,
+      "tier": 9,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 58,
+        "rotoworld": 66
+      },
+      "ppr_rank": 52,
+      "note": "New team."
+    },
+    {
+      "rank": 61,
+      "name": "Jalen Hurts",
+      "pos": "QB",
+      "team": "PHI",
+      "bye": 10,
+      "tier": 10,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 61,
+        "rotoworld": 63
+      },
+      "ppr_rank": 54,
+      "note": "Tush-push rushing touchdowns are worth 6 \u2014 holds value well in standard."
+    },
+    {
+      "rank": 62,
+      "name": "Bhayshul Tuten",
+      "pos": "RB",
+      "team": "JAX",
+      "bye": null,
+      "tier": 10,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 76,
+        "rotoworld": 52
+      },
+      "ppr_rank": 78
+    },
+    {
+      "rank": 63,
+      "name": "Marvin Harrison Jr.",
+      "pos": "WR",
+      "team": "ARI",
+      "bye": 14,
+      "tier": 10,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 57,
+        "rotoworld": 72
+      },
+      "ppr_rank": 55
+    },
+    {
+      "rank": 64,
+      "name": "DK Metcalf",
+      "pos": "WR",
+      "team": "PIT",
+      "bye": null,
+      "tier": 10,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 49,
+        "rotoworld": 77
+      },
+      "ppr_rank": 68,
+      "note": "Riser \u2014 big-play and touchdown profile fits standard.",
+      "injury": {
+        "issue": "Undisclosed",
+        "status": "minor",
+        "penalty": 2,
+        "detail": null
+      }
+    },
+    {
+      "rank": 65,
+      "name": "Carnell Tate",
+      "pos": "WR",
+      "team": "TEN",
+      "bye": null,
+      "tier": 10,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 68,
+        "rotoworld": 62
+      },
+      "ppr_rank": 60
+    },
+    {
+      "rank": 66,
+      "name": "Luther Burden III",
+      "pos": "WR",
+      "team": "CHI",
+      "bye": null,
+      "tier": 10,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 54,
+        "rotoworld": 61
+      },
+      "ppr_rank": 49,
+      "injury": {
+        "issue": "Groin, misses preseason",
+        "status": "short_term_expected_ready",
+        "penalty": 8,
+        "detail": null
+      }
+    },
+    {
+      "rank": 67,
+      "name": "Rome Odunze",
+      "pos": "WR",
+      "team": "CHI",
+      "bye": null,
+      "tier": 10,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 66,
+        "rotoworld": 65
+      },
+      "ppr_rank": 64
+    },
+    {
+      "rank": 68,
+      "name": "Christian Watson",
+      "pos": "WR",
+      "team": "GB",
+      "bye": null,
+      "tier": 10,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 67,
+        "rotoworld": 64
+      },
+      "ppr_rank": 62,
+      "note": "Deep-threat scoring profile holds up without PPR."
+    },
+    {
+      "rank": 69,
+      "name": "Jadarian Price",
+      "pos": "RB",
+      "team": "SEA",
+      "bye": 11,
+      "tier": 11,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 79,
+        "rotoworld": 56
+      },
+      "ppr_rank": 80
+    },
+    {
+      "rank": 70,
+      "name": "Blake Corum",
+      "pos": "RB",
+      "team": "LAR",
+      "bye": null,
+      "tier": 11,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 68
+      }
+    },
+    {
+      "rank": 71,
+      "name": "Tony Pollard",
+      "pos": "RB",
+      "team": "TEN",
+      "bye": null,
+      "tier": 11,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 72,
+        "rotoworld": 73
+      },
+      "ppr_rank": 73
+    },
+    {
+      "rank": 72,
+      "name": "Dak Prescott",
+      "pos": "QB",
+      "team": "DAL",
+      "bye": 14,
+      "tier": 11,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 74,
+        "rotoworld": 71
+      },
+      "ppr_rank": 71
+    },
+    {
+      "rank": 73,
+      "name": "Rico Dowdle",
+      "pos": "RB",
+      "team": "PIT",
+      "bye": null,
+      "tier": 11,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 73,
+        "rotoworld": 76
+      },
+      "ppr_rank": 75
+    },
+    {
+      "rank": 74,
+      "name": "Courtland Sutton",
+      "pos": "WR",
+      "team": "DEN",
+      "bye": null,
+      "tier": 11,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 59,
+        "rotoworld": 93
+      },
+      "ppr_rank": 72,
+      "note": "Riser \u2014 red-zone target share."
+    },
+    {
+      "rank": 75,
+      "name": "Jaylen Warren",
+      "pos": "RB",
+      "team": "PIT",
+      "bye": null,
+      "tier": 11,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 87,
+        "rotoworld": 67
+      },
+      "ppr_rank": 82,
+      "note": "Faller \u2014 passing-down role loses most of its value."
+    },
+    {
+      "rank": 76,
+      "name": "Caleb Williams",
+      "pos": "QB",
+      "team": "CHI",
+      "bye": null,
+      "tier": 12,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 65,
+        "rotoworld": 91
+      },
+      "ppr_rank": 59
+    },
+    {
+      "rank": 77,
+      "name": "Justin Herbert",
+      "pos": "QB",
+      "team": "LAC",
+      "bye": 7,
+      "tier": 12,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 77,
+        "rotoworld": 79
+      },
+      "ppr_rank": 76
+    },
+    {
+      "rank": 78,
+      "name": "Harold Fannin Jr.",
+      "pos": "TE",
+      "team": "CLE",
+      "bye": null,
+      "tier": 12,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 86,
+        "rotoworld": 75
+      },
+      "ppr_rank": 87
+    },
+    {
+      "rank": 79,
+      "name": "Jordan Addison",
+      "pos": "WR",
+      "team": "MIN",
+      "bye": null,
+      "tier": 12,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 81
+      }
+    },
+    {
+      "rank": 80,
+      "name": "Josh Downs",
+      "pos": "WR",
+      "team": "IND",
+      "bye": null,
+      "tier": 12,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 82
+      }
+    },
+    {
+      "rank": 81,
+      "name": "RJ Harvey",
+      "pos": "RB",
+      "team": "DEN",
+      "bye": null,
+      "tier": 12,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 82,
+        "rotoworld": 84
+      },
+      "ppr_rank": 86
+    },
+    {
+      "rank": 82,
+      "name": "Rhamondre Stevenson",
+      "pos": "RB",
+      "team": "NE",
+      "bye": 11,
+      "tier": 12,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 89,
+        "rotoworld": 78
+      },
+      "ppr_rank": 93
+    },
+    {
+      "rank": 83,
+      "name": "Parker Washington",
+      "pos": "WR",
+      "team": "JAX",
+      "bye": null,
+      "tier": 13,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 93,
+        "rotoworld": 70
+      },
+      "ppr_rank": 90,
+      "injury": {
+        "issue": "Undisclosed, day-to-day",
+        "status": "minor",
+        "penalty": 2,
+        "detail": null
+      }
+    },
+    {
+      "rank": 84,
+      "name": "Michael Wilson",
+      "pos": "WR",
+      "team": "ARI",
+      "bye": 14,
+      "tier": 13,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 84,
+        "rotoworld": 87
+      },
+      "ppr_rank": 84
+    },
+    {
+      "rank": 85,
+      "name": "Kyle Pitts Sr.",
+      "pos": "TE",
+      "team": "ATL",
+      "bye": 11,
+      "tier": 13,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 75,
+        "rotoworld": 97
+      },
+      "ppr_rank": 74
+    },
+    {
+      "rank": 86,
+      "name": "Jonathon Brooks",
+      "pos": "RB",
+      "team": "CAR",
+      "bye": null,
+      "tier": 13,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 88
+      }
+    },
+    {
+      "rank": 87,
+      "name": "Chuba Hubbard",
+      "pos": "RB",
+      "team": "CAR",
+      "bye": null,
+      "tier": 13,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 55,
+        "rotoworld": 96
+      },
+      "ppr_rank": 70,
+      "note": "Riser \u2014 early-down volume.",
+      "injury": {
+        "issue": "Hamstring",
+        "status": "week_to_week",
+        "penalty": 15,
+        "detail": "Raises Jonathon Brooks' standalone value."
+      }
+    },
+    {
+      "rank": 88,
+      "name": "Sam LaPorta",
+      "pos": "TE",
+      "team": "DET",
+      "bye": 6,
+      "tier": 13,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 91,
+        "rotoworld": 90
+      },
+      "ppr_rank": 95
+    },
+    {
+      "rank": 89,
+      "name": "Makai Lemon",
+      "pos": "WR",
+      "team": "PHI",
+      "bye": 10,
+      "tier": 13,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 95,
+        "rotoworld": 86
+      },
+      "ppr_rank": 97
+    },
+    {
+      "rank": 90,
+      "name": "Chris Godwin Jr.",
+      "pos": "WR",
+      "team": "TB",
+      "bye": null,
+      "tier": 13,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 88,
+        "rotoworld": 94
+      },
+      "ppr_rank": 83,
+      "note": "Faller \u2014 slot usage without PPR."
+    },
+    {
+      "rank": 91,
+      "name": "J.K. Dobbins",
+      "pos": "RB",
+      "team": "DEN",
+      "bye": null,
+      "tier": 14,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 99,
+        "rotoworld": 83
+      },
+      "ppr_rank": 100
+    },
+    {
+      "rank": 92,
+      "name": "Jayden Reed",
+      "pos": "WR",
+      "team": "GB",
+      "bye": null,
+      "tier": 14,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 92
+      }
+    },
+    {
+      "rank": 93,
+      "name": "Jakobi Meyers",
+      "pos": "WR",
+      "team": "JAX",
+      "bye": null,
+      "tier": 14,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 92,
+        "rotoworld": 95
+      },
+      "ppr_rank": 94
+    },
+    {
+      "rank": 94,
+      "name": "Aaron Jones Sr.",
+      "pos": "RB",
+      "team": "MIN",
+      "bye": 6,
+      "tier": 14,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 90,
+        "rotoworld": 99
+      },
+      "ppr_rank": 96
+    },
+    {
+      "rank": 95,
+      "name": "Alec Pierce",
+      "pos": "WR",
+      "team": "IND",
+      "bye": 13,
+      "tier": 14,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 81,
+        "rotoworld": 106
+      },
+      "ppr_rank": 81,
+      "note": "Low-catch, high-yards-per-catch deep threat \u2014 one of the few WRs unharmed by losing PPR.",
+      "injury": {
+        "issue": "Ankle, off PUP",
+        "status": "minor",
+        "penalty": 2,
+        "detail": null
+      }
+    },
+    {
+      "rank": 96,
+      "name": "Jaxson Dart",
+      "pos": "QB",
+      "team": "NYG",
+      "bye": null,
+      "tier": 14,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 94,
+        "rotoworld": 100
+      },
+      "ppr_rank": 92
+    },
+    {
+      "rank": 97,
+      "name": "Kenny Gainwell",
+      "pos": "RB",
+      "team": "TB",
+      "bye": null,
+      "tier": 14,
+      "sources": [
+        "br_standard"
+      ],
+      "source_ranks": {
+        "br_standard": 97
+      },
+      "ppr_rank": 89,
+      "note": "Faller \u2014 receiving-back profile."
+    },
+    {
+      "rank": 98,
+      "name": "Rachaad White",
+      "pos": "RB",
+      "team": "WAS",
+      "bye": null,
+      "tier": 14,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 98
+      }
+    },
+    {
+      "rank": 99,
+      "name": "Trevor Lawrence",
+      "pos": "QB",
+      "team": "JAX",
+      "bye": null,
+      "tier": 14,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 80,
+        "rotoworld": 118
+      },
+      "ppr_rank": 79
+    },
+    {
+      "rank": 100,
+      "name": "Wan'Dale Robinson",
+      "pos": "WR",
+      "team": "TEN",
+      "bye": null,
+      "tier": 14,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 100,
+        "rotoworld": 101
+      },
+      "ppr_rank": 91,
+      "note": "Biggest faller \u2014 close to a pure PPR asset with little standalone value here."
+    },
+    {
+      "rank": 101,
+      "name": "Travis Kelce",
+      "pos": "TE",
+      "team": "KC",
+      "bye": 5,
+      "tier": 15,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 83,
+        "rotoworld": 121
+      },
+      "ppr_rank": 85
+    },
+    {
+      "rank": 102,
+      "name": "Chris Rodriguez",
+      "pos": "RB",
+      "team": "JAX",
+      "bye": null,
+      "tier": 15,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 102
+      }
+    },
+    {
+      "rank": 103,
+      "name": "Kenneth Gainwell",
+      "pos": "RB",
+      "team": "TB",
+      "bye": null,
+      "tier": 15,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 103
+      }
+    },
+    {
+      "rank": 104,
+      "name": "Kyle Monangai",
+      "pos": "RB",
+      "team": "CHI",
+      "bye": null,
+      "tier": 15,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 74
+      },
+      "injury": {
+        "issue": "Hyperextended knee",
+        "status": "doubtful_week1",
+        "penalty": 30,
+        "detail": null
+      }
+    },
+    {
+      "rank": 105,
+      "name": "Romeo Doubs",
+      "pos": "WR",
+      "team": "NE",
+      "bye": null,
+      "tier": 15,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 104
+      }
+    },
+    {
+      "rank": 106,
+      "name": "Xavier Worthy",
+      "pos": "WR",
+      "team": "KC",
+      "bye": null,
+      "tier": 15,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 105
+      }
+    },
+    {
+      "rank": 107,
+      "name": "Stefon Diggs",
+      "pos": "WR",
+      "team": "WAS",
+      "bye": null,
+      "tier": 15,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 107
+      }
+    },
+    {
+      "rank": 108,
+      "name": "Jordan Love",
+      "pos": "QB",
+      "team": "GB",
+      "bye": null,
+      "tier": 15,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 108
+      }
+    },
+    {
+      "rank": 109,
+      "name": "Patrick Mahomes II",
+      "pos": "QB",
+      "team": "KC",
+      "bye": 5,
+      "tier": 15,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 98,
+        "rotoworld": 89
+      },
+      "ppr_rank": 99,
+      "injury": {
+        "issue": "Knee",
+        "status": "week_to_week",
+        "penalty": 15,
+        "detail": null
+      }
+    },
+    {
+      "rank": 110,
+      "name": "Brock Purdy",
+      "pos": "QB",
+      "team": "SF",
+      "bye": null,
+      "tier": 15,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 109
+      }
+    },
+    {
+      "rank": 111,
+      "name": "KC Concepcion",
+      "pos": "WR",
+      "team": "CLE",
+      "bye": null,
+      "tier": 15,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 110
+      }
+    },
+    {
+      "rank": 112,
+      "name": "Jordan Mason",
+      "pos": "RB",
+      "team": "MIN",
+      "bye": null,
+      "tier": 15,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 111
+      }
+    },
+    {
+      "rank": 113,
+      "name": "Jacory Croskey-Merritt",
+      "pos": "RB",
+      "team": "WAS",
+      "bye": null,
+      "tier": 15,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 112
+      }
+    },
+    {
+      "rank": 114,
+      "name": "Quentin Johnston",
+      "pos": "WR",
+      "team": "LAC",
+      "bye": null,
+      "tier": 15,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 113
+      }
+    },
+    {
+      "rank": 115,
+      "name": "Matthew Stafford",
+      "pos": "QB",
+      "team": "LAR",
+      "bye": null,
+      "tier": 15,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 114
+      }
+    },
+    {
+      "rank": 116,
+      "name": "Keaton Mitchell",
+      "pos": "RB",
+      "team": "LAC",
+      "bye": null,
+      "tier": 16,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 115
+      }
+    },
+    {
+      "rank": 117,
+      "name": "Michael Pittman Jr.",
+      "pos": "WR",
+      "team": "PIT",
+      "bye": null,
+      "tier": 16,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 78,
+        "rotoworld": 124
+      },
+      "ppr_rank": 77,
+      "note": "New team.",
+      "injury": {
+        "issue": "Leg",
+        "status": "week_to_week",
+        "penalty": 15,
+        "detail": null
+      }
+    },
+    {
+      "rank": 118,
+      "name": "Jake Ferguson",
+      "pos": "TE",
+      "team": "DAL",
+      "bye": null,
+      "tier": 16,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 116
+      }
+    },
+    {
+      "rank": 119,
+      "name": "Woody Marks",
+      "pos": "RB",
+      "team": "HOU",
+      "bye": null,
+      "tier": 16,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 117
+      }
+    },
+    {
+      "rank": 120,
+      "name": "Tucker Kraft",
+      "pos": "TE",
+      "team": "GB",
+      "bye": null,
+      "tier": 16,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 71,
+        "rotoworld": 85
+      },
+      "ppr_rank": 66,
+      "injury": {
+        "issue": "ACL recovery, on PUP",
+        "status": "pup_multi_week",
+        "penalty": 40,
+        "detail": "Has a shot at Week 1 but is not a lock."
+      }
+    },
+    {
+      "rank": 121,
+      "name": "Matthew Golden",
+      "pos": "WR",
+      "team": "GB",
+      "bye": null,
+      "tier": 16,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 119
+      }
+    },
+    {
+      "rank": 122,
+      "name": "Dalton Kincaid",
+      "pos": "TE",
+      "team": "BUF",
+      "bye": null,
+      "tier": 16,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 120
+      }
+    },
+    {
+      "rank": 123,
+      "name": "Travis Hunter",
+      "pos": "WR",
+      "team": "JAX",
+      "bye": null,
+      "tier": 16,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 122
+      }
+    },
+    {
+      "rank": 124,
+      "name": "Isaiah Likely",
+      "pos": "TE",
+      "team": "NYG",
+      "bye": null,
+      "tier": 16,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 96,
+        "rotoworld": 149
+      },
+      "ppr_rank": 98
+    },
+    {
+      "rank": 125,
+      "name": "Jared Goff",
+      "pos": "QB",
+      "team": "DET",
+      "bye": null,
+      "tier": 16,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 123
+      }
+    },
+    {
+      "rank": 126,
+      "name": "Tyrone Tracy Jr.",
+      "pos": "RB",
+      "team": "NYG",
+      "bye": null,
+      "tier": 16,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 125
+      }
+    },
+    {
+      "rank": 127,
+      "name": "Kyler Murray",
+      "pos": "QB",
+      "team": "MIN",
+      "bye": null,
+      "tier": 16,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 126
+      }
+    },
+    {
+      "rank": 128,
+      "name": "Mark Andrews",
+      "pos": "TE",
+      "team": "BAL",
+      "bye": null,
+      "tier": 16,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 127
+      }
+    },
+    {
+      "rank": 129,
+      "name": "Bo Nix",
+      "pos": "QB",
+      "team": "DEN",
+      "bye": null,
+      "tier": 16,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 128
+      }
+    },
+    {
+      "rank": 130,
+      "name": "Khalil Shakir",
+      "pos": "WR",
+      "team": "BUF",
+      "bye": null,
+      "tier": 16,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 129
+      }
+    },
+    {
+      "rank": 131,
+      "name": "Tyler Allgeier",
+      "pos": "RB",
+      "team": "ARI",
+      "bye": null,
+      "tier": 17,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 131
+      }
+    },
+    {
+      "rank": 132,
+      "name": "Omar Cooper Jr.",
+      "pos": "WR",
+      "team": "NYJ",
+      "bye": null,
+      "tier": 17,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 132
+      }
+    },
+    {
+      "rank": 133,
+      "name": "Jayden Higgins",
+      "pos": "WR",
+      "team": "HOU",
+      "bye": null,
+      "tier": 17,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 133
+      }
+    },
+    {
+      "rank": 134,
+      "name": "Baker Mayfield",
+      "pos": "QB",
+      "team": "TB",
+      "bye": null,
+      "tier": 17,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 134
+      }
+    },
+    {
+      "rank": 135,
+      "name": "Dallas Goedert",
+      "pos": "TE",
+      "team": "PHI",
+      "bye": null,
+      "tier": 17,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 135
+      }
+    },
+    {
+      "rank": 136,
+      "name": "Deebo Samuel",
+      "pos": "WR",
+      "team": "FA",
+      "bye": null,
+      "tier": 17,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 136
+      }
+    },
+    {
+      "rank": 137,
+      "name": "Jalen Coker",
+      "pos": "WR",
+      "team": "CAR",
+      "bye": null,
+      "tier": 17,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 137
+      }
+    },
+    {
+      "rank": 138,
+      "name": "Dylan Sampson",
+      "pos": "RB",
+      "team": "CLE",
+      "bye": null,
+      "tier": 17,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 138
+      }
+    },
+    {
+      "rank": 139,
+      "name": "Tyjae Spears",
+      "pos": "RB",
+      "team": "TEN",
+      "bye": null,
+      "tier": 17,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 139
+      }
+    },
+    {
+      "rank": 140,
+      "name": "Oronde Gadsden II",
+      "pos": "TE",
+      "team": "LAC",
+      "bye": null,
+      "tier": 17,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 140
+      }
+    },
+    {
+      "rank": 141,
+      "name": "Jauan Jennings",
+      "pos": "WR",
+      "team": "MIN",
+      "bye": null,
+      "tier": 17,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 141
+      }
+    },
+    {
+      "rank": 142,
+      "name": "Rashid Shaheed",
+      "pos": "WR",
+      "team": "SEA",
+      "bye": null,
+      "tier": 17,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 142
+      }
+    },
+    {
+      "rank": 143,
+      "name": "Jordyn Tyson",
+      "pos": "WR",
+      "team": "NO",
+      "bye": null,
+      "tier": 17,
+      "sources": [
+        "br_standard",
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "br_standard": 85,
+        "rotoworld": 80
+      },
+      "ppr_rank": 88,
+      "injury": {
+        "issue": "Hamstring, ~2 months",
+        "status": "extended_absence",
+        "penalty": 60,
+        "detail": "Likely opens on IR."
+      }
+    },
+    {
+      "rank": 144,
+      "name": "Sam Darnold",
+      "pos": "QB",
+      "team": "SEA",
+      "bye": null,
+      "tier": 17,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 143
+      }
+    },
+    {
+      "rank": 145,
+      "name": "Tyler Shough",
+      "pos": "QB",
+      "team": "NO",
+      "bye": null,
+      "tier": 17,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 144
+      }
+    },
+    {
+      "rank": 146,
+      "name": "Juwan Johnson",
+      "pos": "TE",
+      "team": "NO",
+      "bye": null,
+      "tier": 18,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 145
+      }
+    },
+    {
+      "rank": 147,
+      "name": "De'Zhaun Stribling",
+      "pos": "WR",
+      "team": "SF",
+      "bye": null,
+      "tier": 18,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 147
+      }
+    },
+    {
+      "rank": 148,
+      "name": "Brian Robinson Jr.",
+      "pos": "RB",
+      "team": "ATL",
+      "bye": null,
+      "tier": 18,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 148
+      }
+    },
+    {
+      "rank": 149,
+      "name": "Calvin Ridley",
+      "pos": "WR",
+      "team": "TEN",
+      "bye": null,
+      "tier": 18,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 150
+      }
+    },
+    {
+      "rank": 150,
+      "name": "Tre Tucker",
+      "pos": "WR",
+      "team": "LV",
+      "bye": null,
+      "tier": 18,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 151
+      }
+    },
+    {
+      "rank": 151,
+      "name": "Denzel Boston",
+      "pos": "WR",
+      "team": "CLE",
+      "bye": null,
+      "tier": 18,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 152
+      }
+    },
+    {
+      "rank": 152,
+      "name": "Jonah Coleman",
+      "pos": "RB",
+      "team": "DEN",
+      "bye": null,
+      "tier": 18,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 153
+      }
+    },
+    {
+      "rank": 153,
+      "name": "Germie Bernard",
+      "pos": "WR",
+      "team": "PIT",
+      "bye": null,
+      "tier": 18,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 154
+      }
+    },
+    {
+      "rank": 154,
+      "name": "MarShawn Lloyd",
+      "pos": "RB",
+      "team": "GB",
+      "bye": null,
+      "tier": 18,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 155
+      }
+    },
+    {
+      "rank": 155,
+      "name": "Hunter Henry",
+      "pos": "TE",
+      "team": "NE",
+      "bye": null,
+      "tier": 18,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 158
+      }
+    },
+    {
+      "rank": 156,
+      "name": "C.J. Stroud",
+      "pos": "QB",
+      "team": "HOU",
+      "bye": null,
+      "tier": 18,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 159
+      }
+    },
+    {
+      "rank": 157,
+      "name": "Tre Harris",
+      "pos": "WR",
+      "team": "LAC",
+      "bye": null,
+      "tier": 18,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 160
+      }
+    },
+    {
+      "rank": 158,
+      "name": "Jalen Nailor",
+      "pos": "WR",
+      "team": "LV",
+      "bye": null,
+      "tier": 18,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 161
+      }
+    },
+    {
+      "rank": 159,
+      "name": "Braelon Allen",
+      "pos": "RB",
+      "team": "NYJ",
+      "bye": null,
+      "tier": 18,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 162
+      }
+    },
+    {
+      "rank": 160,
+      "name": "Brenton Strange",
+      "pos": "TE",
+      "team": "JAX",
+      "bye": null,
+      "tier": 18,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 163
+      }
+    },
+    {
+      "rank": 161,
+      "name": "Adonai Mitchell",
+      "pos": "WR",
+      "team": "NYJ",
+      "bye": null,
+      "tier": 19,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 164
+      }
+    },
+    {
+      "rank": 162,
+      "name": "Isiah Pacheco",
+      "pos": "RB",
+      "team": "DET",
+      "bye": null,
+      "tier": 19,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 157
+      },
+      "injury": {
+        "issue": "Sprained MCL",
+        "status": "short_term_expected_ready",
+        "penalty": 8,
+        "detail": null
+      }
+    },
+    {
+      "rank": 163,
+      "name": "Ted Hurst",
+      "pos": "WR",
+      "team": "TB",
+      "bye": null,
+      "tier": 19,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 165
+      }
+    },
+    {
+      "rank": 164,
+      "name": "Daniel Jones",
+      "pos": "QB",
+      "team": "IND",
+      "bye": null,
+      "tier": 19,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 166
+      }
+    },
+    {
+      "rank": 165,
+      "name": "Jerry Jeudy",
+      "pos": "WR",
+      "team": "CLE",
+      "bye": null,
+      "tier": 19,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 167
+      }
+    },
+    {
+      "rank": 166,
+      "name": "Malik Washington",
+      "pos": "WR",
+      "team": "MIA",
+      "bye": null,
+      "tier": 19,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 168
+      }
+    },
+    {
+      "rank": 167,
+      "name": "Emmett Johnson",
+      "pos": "RB",
+      "team": "KC",
+      "bye": null,
+      "tier": 19,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 169
+      }
+    },
+    {
+      "rank": 168,
+      "name": "George Kittle",
+      "pos": "TE",
+      "team": "SF",
+      "bye": null,
+      "tier": 19,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 130
+      },
+      "injury": {
+        "issue": "Achilles, on PUP",
+        "status": "pup_multi_week",
+        "penalty": 40,
+        "detail": "Out 4+ weeks if he stays on PUP, though camp reports are ahead of schedule."
+      }
+    },
+    {
+      "rank": 169,
+      "name": "Alvin Kamara",
+      "pos": "RB",
+      "team": "NO",
+      "bye": null,
+      "tier": 19,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 170
+      }
+    },
+    {
+      "rank": 170,
+      "name": "Jalen McMillan",
+      "pos": "WR",
+      "team": "TB",
+      "bye": null,
+      "tier": 19,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 156
+      },
+      "injury": {
+        "issue": "Knee",
+        "status": "week_to_week",
+        "penalty": 15,
+        "detail": null
+      }
+    },
+    {
+      "rank": 171,
+      "name": "T.J. Hockenson",
+      "pos": "TE",
+      "team": "MIN",
+      "bye": null,
+      "tier": 19,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 171
+      }
+    },
+    {
+      "rank": 172,
+      "name": "Kayshon Boutte",
+      "pos": "WR",
+      "team": "NE",
+      "bye": null,
+      "tier": 19,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 173
+      }
+    },
+    {
+      "rank": 173,
+      "name": "Sean Tucker",
+      "pos": "RB",
+      "team": "TB",
+      "bye": null,
+      "tier": 19,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 174
+      }
+    },
+    {
+      "rank": 174,
+      "name": "Malik Willis",
+      "pos": "QB",
+      "team": "MIA",
+      "bye": null,
+      "tier": 19,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 175
+      }
+    },
+    {
+      "rank": 175,
+      "name": "Ja'Kobi Lane",
+      "pos": "WR",
+      "team": "BAL",
+      "bye": null,
+      "tier": 19,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 176
+      }
+    },
+    {
+      "rank": 176,
+      "name": "Isaac TeSlaa",
+      "pos": "WR",
+      "team": "DET",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 177
+      }
+    },
+    {
+      "rank": 177,
+      "name": "Zachariah Branch",
+      "pos": "WR",
+      "team": "ATL",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 178
+      }
+    },
+    {
+      "rank": 178,
+      "name": "Cooper Kupp",
+      "pos": "WR",
+      "team": "SEA",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 179
+      }
+    },
+    {
+      "rank": 179,
+      "name": "Tank Bigsby",
+      "pos": "RB",
+      "team": "PHI",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 180
+      }
+    },
+    {
+      "rank": 180,
+      "name": "Dontayvion Wicks",
+      "pos": "WR",
+      "team": "PHI",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 181
+      }
+    },
+    {
+      "rank": 181,
+      "name": "Nick Singleton",
+      "pos": "RB",
+      "team": "TEN",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 182
+      }
+    },
+    {
+      "rank": 182,
+      "name": "Jaydon Blue",
+      "pos": "RB",
+      "team": "DAL",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 183
+      }
+    },
+    {
+      "rank": 183,
+      "name": "Chig Okonkwo",
+      "pos": "TE",
+      "team": "WAS",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 184
+      }
+    },
+    {
+      "rank": 184,
+      "name": "Pat Bryant",
+      "pos": "WR",
+      "team": "DEN",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 185
+      }
+    },
+    {
+      "rank": 185,
+      "name": "Zach Charbonnet",
+      "pos": "RB",
+      "team": "SEA",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 146
+      },
+      "injury": {
+        "issue": "Knee, on PUP",
+        "status": "pup_multi_week",
+        "penalty": 40,
+        "detail": null
+      }
+    },
+    {
+      "rank": 186,
+      "name": "Tank Dell",
+      "pos": "WR",
+      "team": "HOU",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 172
+      },
+      "injury": {
+        "issue": "Knee",
+        "status": "week_to_week",
+        "penalty": 15,
+        "detail": null
+      }
+    },
+    {
+      "rank": 187,
+      "name": "Antonio Williams",
+      "pos": "WR",
+      "team": "WAS",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 187
+      }
+    },
+    {
+      "rank": 188,
+      "name": "Cyrus Allen",
+      "pos": "WR",
+      "team": "KC",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 188
+      }
+    },
+    {
+      "rank": 189,
+      "name": "Dalton Schultz",
+      "pos": "TE",
+      "team": "HOU",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 189
+      }
+    },
+    {
+      "rank": 190,
+      "name": "Kaytron Allen",
+      "pos": "RB",
+      "team": "WAS",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 190
+      }
+    },
+    {
+      "rank": 191,
+      "name": "George Holani",
+      "pos": "RB",
+      "team": "SEA",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 191
+      }
+    },
+    {
+      "rank": 192,
+      "name": "A.J. Barner",
+      "pos": "TE",
+      "team": "SEA",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 192
+      }
+    },
+    {
+      "rank": 193,
+      "name": "Mike Washington",
+      "pos": "RB",
+      "team": "LV",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 193
+      }
+    },
+    {
+      "rank": 194,
+      "name": "Ray Davis",
+      "pos": "RB",
+      "team": "BUF",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 194
+      }
+    },
+    {
+      "rank": 195,
+      "name": "Rashod Bateman",
+      "pos": "WR",
+      "team": "BAL",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 195
+      }
+    },
+    {
+      "rank": 196,
+      "name": "Elijah Sarratt",
+      "pos": "WR",
+      "team": "BAL",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 197
+      }
+    },
+    {
+      "rank": 197,
+      "name": "Darnell Mooney",
+      "pos": "WR",
+      "team": "NYG",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 199
+      }
+    },
+    {
+      "rank": 198,
+      "name": "Christian Kirk",
+      "pos": "WR",
+      "team": "SF",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 198
+      },
+      "injury": {
+        "issue": "Calf",
+        "status": "minor",
+        "penalty": 2,
+        "detail": null
+      }
+    },
+    {
+      "rank": 199,
+      "name": "Darren Waller",
+      "pos": "TE",
+      "team": "CAR",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 200
+      }
+    },
+    {
+      "rank": 200,
+      "name": "Kenyon Sadiq",
+      "pos": "TE",
+      "team": "NYJ",
+      "bye": null,
+      "tier": 20,
+      "sources": [
+        "rotoworld"
+      ],
+      "source_ranks": {
+        "rotoworld": 196
+      },
+      "injury": {
+        "issue": "Hernia surgery setback",
+        "status": "doubtful_week1",
+        "penalty": 30,
+        "detail": null
+      }
+    }
   ]
 }

@@ -1,0 +1,48 @@
+{
+  "retrieved": "2026-08-15",
+  "sources": [
+    "Yahoo Sports — NFL Training Camp Injury Report (2026)",
+    "FantasyLife — Training Camp Updates: Kittle, Burden, Achane"
+  ],
+  "note": "Published rankings boards are built before camp and rarely reflect this. Two players are already out for the season and appear on no ranking list as such.",
+  "penalty_scale": {
+    "out_for_season": "excluded from the board entirely",
+    "extended_absence": 60,
+    "pup_multi_week": 40,
+    "doubtful_week1": 30,
+    "week_to_week": 15,
+    "short_term_expected_ready": 8,
+    "recovery_on_track": 5,
+    "minor": 2
+  },
+  "players": {
+    "Ricky Pearsall":      {"team": "SF",  "issue": "Knee, PCL surgery",        "status": "out_for_season"},
+    "Chris Brazzell":      {"team": "CAR", "issue": "Knee, LCL",                "status": "out_for_season"},
+    "Jordyn Tyson":        {"team": "NO",  "issue": "Hamstring, ~2 months",     "status": "extended_absence", "detail": "Likely opens on IR."},
+    "George Kittle":       {"team": "SF",  "issue": "Achilles, on PUP",         "status": "pup_multi_week",   "detail": "Out 4+ weeks if he stays on PUP, though camp reports are ahead of schedule."},
+    "Kyle Monangai":       {"team": "CHI", "issue": "Hyperextended knee",       "status": "doubtful_week1"},
+    "Zach Charbonnet":     {"team": "SEA", "issue": "Knee, on PUP",             "status": "pup_multi_week"},
+    "Kenyon Sadiq":        {"team": "NYJ", "issue": "Hernia surgery setback",   "status": "doubtful_week1"},
+    "Jeremiyah Love":      {"team": "ARI", "issue": "High ankle sprain, ~4wk",  "status": "short_term_expected_ready"},
+    "Breece Hall":         {"team": "NYJ", "issue": "Groin, 2-3 weeks",         "status": "short_term_expected_ready"},
+    "Chuba Hubbard":       {"team": "CAR", "issue": "Hamstring",                "status": "week_to_week",     "detail": "Raises Jonathon Brooks' standalone value."},
+    "Emeka Egbuka":        {"team": "TB",  "issue": "Toe",                      "status": "week_to_week",     "detail": "Availability genuinely uncertain — notable at his draft cost."},
+    "Luther Burden III":   {"team": "CHI", "issue": "Groin, misses preseason",  "status": "short_term_expected_ready"},
+    "Tucker Kraft":        {"team": "GB",  "issue": "ACL recovery, on PUP",     "status": "pup_multi_week",   "detail": "Has a shot at Week 1 but is not a lock."},
+    "Malik Nabers":        {"team": "NYG", "issue": "ACL recovery",             "status": "recovery_on_track","detail": "Practicing; reported ahead of expectations."},
+    "Josh Jacobs":         {"team": "GB",  "issue": "Groin",                    "status": "week_to_week"},
+    "Isiah Pacheco":       {"team": "DET", "issue": "Sprained MCL",             "status": "short_term_expected_ready"},
+    "Patrick Mahomes":     {"team": "KC",  "issue": "Knee",                     "status": "week_to_week"},
+    "Puka Nacua":          {"team": "LAR", "issue": "Groin, minor",             "status": "minor"},
+    "Alec Pierce":         {"team": "IND", "issue": "Ankle, off PUP",           "status": "minor"},
+    "Michael Pittman Jr.": {"team": "PIT", "issue": "Leg",                      "status": "week_to_week"},
+    "DK Metcalf":          {"team": "PIT", "issue": "Undisclosed",              "status": "minor"},
+    "Parker Washington":   {"team": "JAX", "issue": "Undisclosed, day-to-day",  "status": "minor"},
+    "Tank Dell":           {"team": "HOU", "issue": "Knee",                     "status": "week_to_week"},
+    "Christian Kirk":      {"team": "SF",  "issue": "Calf",                     "status": "minor"},
+    "Jalen McMillan":      {"team": "TB",  "issue": "Knee",                     "status": "week_to_week"},
+    "Keon Coleman":        {"team": "BUF", "issue": "Foot/toe",                 "status": "week_to_week"},
+    "LeQuint Allen Jr.":   {"team": "JAX", "issue": "Soft tissue",              "status": "week_to_week"},
+    "Michael Penix Jr.":   {"team": "ATL", "issue": "Knee",                     "status": "week_to_week"}
+  }
+}

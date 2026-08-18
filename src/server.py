@@ -51,6 +51,7 @@ _cache: dict[str, Any] = {
     "last_poll": None,
     "poll_error": None,
     "connected": False,
+    "news": None,
 }
 _lock = asyncio.Lock()
 
@@ -254,6 +255,7 @@ async def status() -> JSONResponse:
             "unmet_starters": state.unmet_starters(),
             "recent_picks": state.drafted[-10:],
             "recommendations": recommendations,
+            "news": _cache.get("news"),
         }
     )
 
@@ -351,6 +353,30 @@ async def manual_pick(name: str, mine: bool = False) -> JSONResponse:
     return JSONResponse({"ok": True, "marked": match["name"], "mine": mine})
 
 
+@app.post("/api/undraft/{name}")
+async def undraft(name: str) -> JSONResponse:
+    """Put a specific player back on the board.
+
+    Distinct from /api/undo, which only reverses the most recent pick. During a live
+    draft you often notice a mistake several picks later, so targeted reversal is the
+    one that actually gets used.
+    """
+    key = normalize_name(name)
+    before = len(state.drafted)
+    removed = [p for p in state.drafted if normalize_name(p.get("name", "")) == key]
+    if not removed:
+        return JSONResponse({"error": f"'{name}' is not marked drafted"}, status_code=404)
+
+    state.drafted = [p for p in state.drafted if normalize_name(p.get("name", "")) != key]
+    # Renumber so pick numbers stay contiguous with the real draft.
+    for i, p in enumerate(state.drafted, start=1):
+        p["pick"] = i
+    _cache["computed_for_pick"] = None
+    return JSONResponse(
+        {"ok": True, "restored": removed[0]["name"], "removed_count": before - len(state.drafted)}
+    )
+
+
 @app.post("/api/undo")
 async def undo_last() -> JSONResponse:
     """Remove the most recent pick. Manual entry means typos, so this is essential."""
@@ -359,6 +385,41 @@ async def undo_last() -> JSONResponse:
     removed = state.drafted.pop()
     _cache["computed_for_pick"] = None
     return JSONResponse({"ok": True, "removed": removed["name"]})
+
+
+@app.post("/api/news")
+async def refresh_news() -> JSONResponse:
+    """Get Latest — search for news since the board was built and fold it in.
+
+    Slow (web search plus a model call), so it is user-triggered rather than polled.
+    Run it once before the draft; running it mid-draft is fine but costs ~a minute.
+    """
+    from .news import apply_updates, fetch_updates
+
+    try:
+        result = await asyncio.to_thread(fetch_updates, settings, rankings)
+    except Exception as exc:  # noqa: BLE001
+        traceback.print_exc()
+        return JSONResponse({"error": str(exc)}, status_code=500)
+
+    if result.get("error"):
+        return JSONResponse(result, status_code=502)
+
+    report = apply_updates(rankings, result.get("updates", []))
+    _cache["news"] = {
+        "summary": result.get("summary", ""),
+        "searched_at": result.get("searched_at"),
+        "updates": result.get("updates", []),
+        **report,
+    }
+    # Board changed — force a recompute so recommendations reflect it.
+    _cache["computed_for_pick"] = None
+    return JSONResponse(_cache["news"])
+
+
+@app.get("/api/news")
+async def last_news() -> JSONResponse:
+    return JSONResponse(_cache.get("news") or {"summary": "", "updates": []})
 
 
 @app.post("/api/refresh")

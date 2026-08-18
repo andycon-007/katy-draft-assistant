@@ -1,0 +1,800 @@
+{
+  "source": "Bleacher Report Top 100 PPR (2026), converted to standard scoring",
+  "url": "https://bleacherreport.com/articles/25458550-top-100-fantasy-football-rankings-ppr-leagues-2026",
+  "retrieved": "2026-08-14",
+  "format_basis": "STANDARD (converted from PPR)",
+  "players": [
+    {
+      "rank": 1,
+      "name": "Jahmyr Gibbs",
+      "pos": "RB",
+      "team": "DET",
+      "bye": 6,
+      "ppr_rank": 1,
+      "note": "Externally sourced as #1 in both Half-PPR and Standard. Volume rises with Montgomery gone."
+    },
+    {
+      "rank": 2,
+      "name": "Bijan Robinson",
+      "pos": "RB",
+      "team": "ATL",
+      "bye": 11,
+      "ppr_rank": 4,
+      "note": "Sourced #2 in standard. Rises here relative to the PPR board."
+    },
+    {
+      "rank": 3,
+      "name": "Ja'Marr Chase",
+      "pos": "WR",
+      "team": "CIN",
+      "bye": 6,
+      "ppr_rank": 3
+    },
+    {
+      "rank": 4,
+      "name": "Puka Nacua",
+      "pos": "WR",
+      "team": "LAR",
+      "bye": 11,
+      "ppr_rank": 5
+    },
+    {
+      "rank": 5,
+      "name": "Jaxon Smith-Njigba",
+      "pos": "WR",
+      "team": "SEA",
+      "bye": 11,
+      "ppr_rank": 2,
+      "note": "Widest source disagreement on the board \u2014 BR had him #2, others notably lower. Rank is soft."
+    },
+    {
+      "rank": 6,
+      "name": "Justin Jefferson",
+      "pos": "WR",
+      "team": "MIN",
+      "bye": 6,
+      "ppr_rank": 6
+    },
+    {
+      "rank": 7,
+      "name": "Jonathan Taylor",
+      "pos": "RB",
+      "team": "IND",
+      "bye": 13,
+      "ppr_rank": 7,
+      "note": "Pure volume rusher \u2014 profile ages well in standard."
+    },
+    {
+      "rank": 8,
+      "name": "CeeDee Lamb",
+      "pos": "WR",
+      "team": "DAL",
+      "bye": 14,
+      "ppr_rank": 10
+    },
+    {
+      "rank": 9,
+      "name": "Amon-Ra St. Brown",
+      "pos": "WR",
+      "team": "DET",
+      "bye": 6,
+      "ppr_rank": 8,
+      "note": "Slips slightly \u2014 reception volume no longer pays. Shares a bye with Gibbs."
+    },
+    {
+      "rank": 10,
+      "name": "James Cook III",
+      "pos": "RB",
+      "team": "BUF",
+      "bye": 7,
+      "ppr_rank": 9
+    },
+    {
+      "rank": 11,
+      "name": "Ashton Jeanty",
+      "pos": "RB",
+      "team": "LV",
+      "bye": 13,
+      "ppr_rank": 14
+    },
+    {
+      "rank": 12,
+      "name": "Nico Collins",
+      "pos": "WR",
+      "team": "HOU",
+      "bye": 8,
+      "ppr_rank": 12
+    },
+    {
+      "rank": 13,
+      "name": "A.J. Brown",
+      "pos": "WR",
+      "team": "NE",
+      "bye": 11,
+      "ppr_rank": 13,
+      "note": "New team \u2014 usage projection carries more uncertainty than usual."
+    },
+    {
+      "rank": 14,
+      "name": "Derrick Henry",
+      "pos": "RB",
+      "team": "BAL",
+      "ppr_rank": 30,
+      "note": "Biggest riser on the board. Rushing volume and touchdowns with zero PPR drag."
+    },
+    {
+      "rank": 15,
+      "name": "George Pickens",
+      "pos": "WR",
+      "team": "DAL",
+      "bye": 14,
+      "ppr_rank": 15
+    },
+    {
+      "rank": 16,
+      "name": "De'Von Achane",
+      "pos": "RB",
+      "team": "MIA",
+      "bye": 6,
+      "ppr_rank": 11,
+      "note": "Falls \u2014 much of his projection was reception-driven."
+    },
+    {
+      "rank": 17,
+      "name": "Emeka Egbuka",
+      "pos": "WR",
+      "team": "TB",
+      "ppr_rank": 16
+    },
+    {
+      "rank": 18,
+      "name": "Christian McCaffrey",
+      "pos": "RB",
+      "team": "SF",
+      "bye": 8,
+      "ppr_rank": 24
+    },
+    {
+      "rank": 19,
+      "name": "Omarion Hampton",
+      "pos": "RB",
+      "team": "LAC",
+      "bye": 7,
+      "ppr_rank": 18
+    },
+    {
+      "rank": 20,
+      "name": "Saquon Barkley",
+      "pos": "RB",
+      "team": "PHI",
+      "bye": 10,
+      "ppr_rank": 21
+    },
+    {
+      "rank": 21,
+      "name": "Trey McBride",
+      "pos": "TE",
+      "team": "ARI",
+      "bye": 14,
+      "ppr_rank": 17,
+      "note": "Still the clear TE1, but tight ends lose the most without PPR."
+    },
+    {
+      "rank": 22,
+      "name": "Drake London",
+      "pos": "WR",
+      "team": "ATL",
+      "bye": 11,
+      "ppr_rank": 20
+    },
+    {
+      "rank": 23,
+      "name": "Chris Olave",
+      "pos": "WR",
+      "team": "NO",
+      "ppr_rank": 19
+    },
+    {
+      "rank": 24,
+      "name": "Kyren Williams",
+      "pos": "RB",
+      "team": "LAR",
+      "bye": 11,
+      "ppr_rank": 36,
+      "note": "Riser \u2014 goal-line role is the thesis and it survives without PPR."
+    },
+    {
+      "rank": 25,
+      "name": "DeVonta Smith",
+      "pos": "WR",
+      "team": "PHI",
+      "bye": 10,
+      "ppr_rank": 22
+    },
+    {
+      "rank": 26,
+      "name": "Brock Bowers",
+      "pos": "TE",
+      "team": "LV",
+      "bye": 13,
+      "ppr_rank": 23,
+      "note": "After McBride and Bowers there is a real cliff at tight end."
+    },
+    {
+      "rank": 27,
+      "name": "Josh Allen",
+      "pos": "QB",
+      "team": "BUF",
+      "bye": 7,
+      "ppr_rank": 25,
+      "note": "Consensus QB1. With one QB slot and 4-point passing TDs, waiting is defensible."
+    },
+    {
+      "rank": 28,
+      "name": "Chase Brown",
+      "pos": "RB",
+      "team": "CIN",
+      "bye": 6,
+      "ppr_rank": 27
+    },
+    {
+      "rank": 29,
+      "name": "Mike Evans",
+      "pos": "WR",
+      "team": "SF",
+      "bye": 8,
+      "ppr_rank": 48,
+      "note": "Riser \u2014 red-zone touchdown profile is ideal for standard. New team."
+    },
+    {
+      "rank": 30,
+      "name": "Zay Flowers",
+      "pos": "WR",
+      "team": "BAL",
+      "ppr_rank": 28
+    },
+    {
+      "rank": 31,
+      "name": "Garrett Wilson",
+      "pos": "WR",
+      "team": "NYJ",
+      "ppr_rank": 26
+    },
+    {
+      "rank": 32,
+      "name": "Rashee Rice",
+      "pos": "WR",
+      "team": "KC",
+      "bye": 5,
+      "ppr_rank": 29
+    },
+    {
+      "rank": 33,
+      "name": "Quinshon Judkins",
+      "pos": "RB",
+      "team": "CLE",
+      "ppr_rank": 58,
+      "note": "Major riser \u2014 early-down and goal-line work never needed catches."
+    },
+    {
+      "rank": 34,
+      "name": "Breece Hall",
+      "pos": "RB",
+      "team": "NYJ",
+      "ppr_rank": 34
+    },
+    {
+      "rank": 35,
+      "name": "David Montgomery",
+      "pos": "RB",
+      "team": "HOU",
+      "bye": 8,
+      "ppr_rank": 56,
+      "note": "Major riser \u2014 touchdown-dependent grinder. New team."
+    },
+    {
+      "rank": 36,
+      "name": "Lamar Jackson",
+      "pos": "QB",
+      "team": "BAL",
+      "ppr_rank": 31,
+      "note": "Rushing TDs at 6 points preserve the edge for mobile QBs."
+    },
+    {
+      "rank": 37,
+      "name": "Joe Burrow",
+      "pos": "QB",
+      "team": "CIN",
+      "bye": 6,
+      "ppr_rank": 32
+    },
+    {
+      "rank": 38,
+      "name": "Tetairoa McMillan",
+      "pos": "WR",
+      "team": "CAR",
+      "ppr_rank": 35
+    },
+    {
+      "rank": 39,
+      "name": "Josh Jacobs",
+      "pos": "RB",
+      "team": "GB",
+      "ppr_rank": 50,
+      "note": "Riser \u2014 workhorse volume plus goal-line usage."
+    },
+    {
+      "rank": 40,
+      "name": "Colston Loveland",
+      "pos": "TE",
+      "team": "CHI",
+      "ppr_rank": 33,
+      "note": "First TE after the cliff; drops with the position."
+    },
+    {
+      "rank": 41,
+      "name": "Kenneth Walker III",
+      "pos": "RB",
+      "team": "KC",
+      "bye": 5,
+      "ppr_rank": 38,
+      "note": "New team \u2014 watch the backfield split through preseason."
+    },
+    {
+      "rank": 42,
+      "name": "Tee Higgins",
+      "pos": "WR",
+      "team": "CIN",
+      "bye": 6,
+      "ppr_rank": 40
+    },
+    {
+      "rank": 43,
+      "name": "Drake Maye",
+      "pos": "QB",
+      "team": "NE",
+      "bye": 11,
+      "ppr_rank": 39
+    },
+    {
+      "rank": 44,
+      "name": "Javonte Williams",
+      "pos": "RB",
+      "team": "DAL",
+      "bye": 14,
+      "ppr_rank": 41
+    },
+    {
+      "rank": 45,
+      "name": "Jaylen Waddle",
+      "pos": "WR",
+      "team": "DEN",
+      "ppr_rank": 37,
+      "note": "New team \u2014 role uncertainty."
+    },
+    {
+      "rank": 46,
+      "name": "Jeremiyah Love",
+      "pos": "RB",
+      "team": "ARI",
+      "bye": 14,
+      "ppr_rank": 43
+    },
+    {
+      "rank": 47,
+      "name": "Terry McLaurin",
+      "pos": "WR",
+      "team": "WAS",
+      "ppr_rank": 44
+    },
+    {
+      "rank": 48,
+      "name": "Malik Nabers",
+      "pos": "WR",
+      "team": "NYG",
+      "ppr_rank": 45
+    },
+    {
+      "rank": 49,
+      "name": "DK Metcalf",
+      "pos": "WR",
+      "team": "PIT",
+      "ppr_rank": 68,
+      "note": "Riser \u2014 big-play and touchdown profile fits standard."
+    },
+    {
+      "rank": 50,
+      "name": "Brian Thomas Jr.",
+      "pos": "WR",
+      "team": "JAX",
+      "ppr_rank": 69,
+      "note": "Riser \u2014 downfield scoring rather than catch volume."
+    },
+    {
+      "rank": 51,
+      "name": "Cam Skattebo",
+      "pos": "RB",
+      "team": "NYG",
+      "ppr_rank": 47
+    },
+    {
+      "rank": 52,
+      "name": "Davante Adams",
+      "pos": "WR",
+      "team": "LAR",
+      "bye": 11,
+      "ppr_rank": 46
+    },
+    {
+      "rank": 53,
+      "name": "Ladd McConkey",
+      "pos": "WR",
+      "team": "LAC",
+      "bye": 7,
+      "ppr_rank": 42,
+      "note": "Faller \u2014 slot profile loses its scoring engine."
+    },
+    {
+      "rank": 54,
+      "name": "Luther Burden III",
+      "pos": "WR",
+      "team": "CHI",
+      "ppr_rank": 49
+    },
+    {
+      "rank": 55,
+      "name": "Chuba Hubbard",
+      "pos": "RB",
+      "team": "CAR",
+      "ppr_rank": 70,
+      "note": "Riser \u2014 early-down volume."
+    },
+    {
+      "rank": 56,
+      "name": "Jameson Williams",
+      "pos": "WR",
+      "team": "DET",
+      "bye": 6,
+      "ppr_rank": 51
+    },
+    {
+      "rank": 57,
+      "name": "Marvin Harrison Jr.",
+      "pos": "WR",
+      "team": "ARI",
+      "bye": 14,
+      "ppr_rank": 55
+    },
+    {
+      "rank": 58,
+      "name": "DJ Moore",
+      "pos": "WR",
+      "team": "BUF",
+      "bye": 7,
+      "ppr_rank": 52,
+      "note": "New team."
+    },
+    {
+      "rank": 59,
+      "name": "Courtland Sutton",
+      "pos": "WR",
+      "team": "DEN",
+      "ppr_rank": 72,
+      "note": "Riser \u2014 red-zone target share."
+    },
+    {
+      "rank": 60,
+      "name": "Travis Etienne Jr.",
+      "pos": "RB",
+      "team": "NO",
+      "ppr_rank": 53,
+      "note": "Faller \u2014 receiving work was part of the case. New team."
+    },
+    {
+      "rank": 61,
+      "name": "Jalen Hurts",
+      "pos": "QB",
+      "team": "PHI",
+      "bye": 10,
+      "ppr_rank": 54,
+      "note": "Tush-push rushing touchdowns are worth 6 \u2014 holds value well in standard."
+    },
+    {
+      "rank": 62,
+      "name": "Bucky Irving",
+      "pos": "RB",
+      "team": "TB",
+      "ppr_rank": 67,
+      "note": "Flagged externally as a mid-round back who can beat his draft cost."
+    },
+    {
+      "rank": 63,
+      "name": "Tyler Warren",
+      "pos": "TE",
+      "team": "IND",
+      "bye": 13,
+      "ppr_rank": 57
+    },
+    {
+      "rank": 64,
+      "name": "TreVeyon Henderson",
+      "pos": "RB",
+      "team": "NE",
+      "bye": 11,
+      "ppr_rank": 61
+    },
+    {
+      "rank": 65,
+      "name": "Caleb Williams",
+      "pos": "QB",
+      "team": "CHI",
+      "ppr_rank": 59
+    },
+    {
+      "rank": 66,
+      "name": "Rome Odunze",
+      "pos": "WR",
+      "team": "CHI",
+      "ppr_rank": 64
+    },
+    {
+      "rank": 67,
+      "name": "Christian Watson",
+      "pos": "WR",
+      "team": "GB",
+      "ppr_rank": 62,
+      "note": "Deep-threat scoring profile holds up without PPR."
+    },
+    {
+      "rank": 68,
+      "name": "Carnell Tate",
+      "pos": "WR",
+      "team": "TEN",
+      "ppr_rank": 60
+    },
+    {
+      "rank": 69,
+      "name": "Jayden Daniels",
+      "pos": "QB",
+      "team": "WAS",
+      "ppr_rank": 63,
+      "note": "At least one model rates him above consensus ADP. Rushing floor helps."
+    },
+    {
+      "rank": 70,
+      "name": "D'Andre Swift",
+      "pos": "RB",
+      "team": "CHI",
+      "ppr_rank": 65,
+      "note": "Slight faller \u2014 receiving-back profile."
+    },
+    {
+      "rank": 71,
+      "name": "Tucker Kraft",
+      "pos": "TE",
+      "team": "GB",
+      "ppr_rank": 66
+    },
+    {
+      "rank": 72,
+      "name": "Tony Pollard",
+      "pos": "RB",
+      "team": "TEN",
+      "ppr_rank": 73
+    },
+    {
+      "rank": 73,
+      "name": "Rico Dowdle",
+      "pos": "RB",
+      "team": "PIT",
+      "ppr_rank": 75
+    },
+    {
+      "rank": 74,
+      "name": "Dak Prescott",
+      "pos": "QB",
+      "team": "DAL",
+      "bye": 14,
+      "ppr_rank": 71
+    },
+    {
+      "rank": 75,
+      "name": "Kyle Pitts Sr.",
+      "pos": "TE",
+      "team": "ATL",
+      "bye": 11,
+      "ppr_rank": 74
+    },
+    {
+      "rank": 76,
+      "name": "Bhayshul Tuten",
+      "pos": "RB",
+      "team": "JAX",
+      "ppr_rank": 78
+    },
+    {
+      "rank": 77,
+      "name": "Justin Herbert",
+      "pos": "QB",
+      "team": "LAC",
+      "bye": 7,
+      "ppr_rank": 76
+    },
+    {
+      "rank": 78,
+      "name": "Michael Pittman Jr.",
+      "pos": "WR",
+      "team": "PIT",
+      "ppr_rank": 77,
+      "note": "New team."
+    },
+    {
+      "rank": 79,
+      "name": "Jadarian Price",
+      "pos": "RB",
+      "team": "SEA",
+      "bye": 11,
+      "ppr_rank": 80
+    },
+    {
+      "rank": 80,
+      "name": "Trevor Lawrence",
+      "pos": "QB",
+      "team": "JAX",
+      "ppr_rank": 79
+    },
+    {
+      "rank": 81,
+      "name": "Alec Pierce",
+      "pos": "WR",
+      "team": "IND",
+      "bye": 13,
+      "ppr_rank": 81,
+      "note": "Low-catch, high-yards-per-catch deep threat \u2014 one of the few WRs unharmed by losing PPR."
+    },
+    {
+      "rank": 82,
+      "name": "RJ Harvey",
+      "pos": "RB",
+      "team": "DEN",
+      "ppr_rank": 86
+    },
+    {
+      "rank": 83,
+      "name": "Travis Kelce",
+      "pos": "TE",
+      "team": "KC",
+      "bye": 5,
+      "ppr_rank": 85
+    },
+    {
+      "rank": 84,
+      "name": "Michael Wilson",
+      "pos": "WR",
+      "team": "ARI",
+      "bye": 14,
+      "ppr_rank": 84
+    },
+    {
+      "rank": 85,
+      "name": "Jordyn Tyson",
+      "pos": "WR",
+      "team": "NO",
+      "ppr_rank": 88
+    },
+    {
+      "rank": 86,
+      "name": "Harold Fannin Jr.",
+      "pos": "TE",
+      "team": "CLE",
+      "ppr_rank": 87
+    },
+    {
+      "rank": 87,
+      "name": "Jaylen Warren",
+      "pos": "RB",
+      "team": "PIT",
+      "ppr_rank": 82,
+      "note": "Faller \u2014 passing-down role loses most of its value."
+    },
+    {
+      "rank": 88,
+      "name": "Chris Godwin Jr.",
+      "pos": "WR",
+      "team": "TB",
+      "ppr_rank": 83,
+      "note": "Faller \u2014 slot usage without PPR."
+    },
+    {
+      "rank": 89,
+      "name": "Rhamondre Stevenson",
+      "pos": "RB",
+      "team": "NE",
+      "bye": 11,
+      "ppr_rank": 93
+    },
+    {
+      "rank": 90,
+      "name": "Aaron Jones Sr.",
+      "pos": "RB",
+      "team": "MIN",
+      "bye": 6,
+      "ppr_rank": 96
+    },
+    {
+      "rank": 91,
+      "name": "Sam LaPorta",
+      "pos": "TE",
+      "team": "DET",
+      "bye": 6,
+      "ppr_rank": 95
+    },
+    {
+      "rank": 92,
+      "name": "Jakobi Meyers",
+      "pos": "WR",
+      "team": "JAX",
+      "ppr_rank": 94
+    },
+    {
+      "rank": 93,
+      "name": "Parker Washington",
+      "pos": "WR",
+      "team": "JAX",
+      "ppr_rank": 90
+    },
+    {
+      "rank": 94,
+      "name": "Jaxson Dart",
+      "pos": "QB",
+      "team": "NYG",
+      "ppr_rank": 92
+    },
+    {
+      "rank": 95,
+      "name": "Makai Lemon",
+      "pos": "WR",
+      "team": "PHI",
+      "bye": 10,
+      "ppr_rank": 97
+    },
+    {
+      "rank": 96,
+      "name": "Isaiah Likely",
+      "pos": "TE",
+      "team": "NYG",
+      "ppr_rank": 98
+    },
+    {
+      "rank": 97,
+      "name": "Kenny Gainwell",
+      "pos": "RB",
+      "team": "TB",
+      "ppr_rank": 89,
+      "note": "Faller \u2014 receiving-back profile."
+    },
+    {
+      "rank": 98,
+      "name": "Patrick Mahomes II",
+      "pos": "QB",
+      "team": "KC",
+      "bye": 5,
+      "ppr_rank": 99
+    },
+    {
+      "rank": 99,
+      "name": "J.K. Dobbins",
+      "pos": "RB",
+      "team": "DEN",
+      "ppr_rank": 100
+    },
+    {
+      "rank": 100,
+      "name": "Wan'Dale Robinson",
+      "pos": "WR",
+      "team": "TEN",
+      "ppr_rank": 91,
+      "note": "Biggest faller \u2014 close to a pure PPR asset with little standalone value here."
+    }
+  ]
+}

@@ -115,6 +115,23 @@
   .row { display: flex; gap: 8px; }
   .row > * { flex: 1; }
 
+  .boardhint { font-size: 12px; color: var(--dim); margin-top: 7px; }
+  .boardlist { max-height: 46vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .brow {
+    display: flex; align-items: center; gap: 9px; padding: 9px 16px;
+    border-top: 1px solid rgba(42,47,58,.6); font-size: 15px;
+  }
+  .brow .bn { flex: 1; overflow-wrap: anywhere; }
+  .brow .brk { font-size: 11px; color: var(--dim); font-variant-numeric: tabular-nums; }
+  .brow.gone .bn { text-decoration: line-through; color: var(--dim); }
+  .brow.mine { background: rgba(70,200,138,.10); }
+  .brow.mine .bn { text-decoration: none; color: var(--good); }
+  .btog {
+    width: 38px; min-width: 38px; padding: 7px 0; text-align: center;
+    border-radius: 8px; border: 1px solid var(--line); background: var(--panel-2);
+    color: var(--dim); font-size: 15px; cursor: pointer; line-height: 1;
+  }
+  .brow.gone .btog, .brow.mine .btog { color: var(--accent); border-color: rgba(78,161,255,.4); }
   .status { font-size: 13px; color: var(--dim); padding: 10px 16px; border-top: 1px solid var(--line); }
   .status .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; background: var(--bad); }
   .status .dot.ok { background: var(--good); }
@@ -187,6 +204,26 @@
         </div>
       </div>
 
+      <div class="card" style="margin-bottom:16px">
+        <h2>Latest News</h2>
+        <div class="body">
+          <button class="primary" id="newsBtn">Get Latest</button>
+          <div class="boardhint">Searches for injuries and roster changes since the board was
+            built, then folds them in. Takes up to a minute — run it before the draft.</div>
+          <div id="newsOut" style="margin-top:10px;font-size:14px"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <h2>Board</h2>
+        <div class="body" style="padding-bottom:6px">
+          <input id="boardSearch" placeholder="Filter players…" autocomplete="off"
+                 autocapitalize="off" autocorrect="off">
+          <div class="boardhint">Tap ✕ to take off the board · tap ↺ to put back</div>
+        </div>
+        <div id="boardList" class="boardlist"></div>
+      </div>
+
       <div class="card">
         <h2>Recent Picks</h2>
         <div class="body" id="recent" style="font-size:14.5px;color:var(--dim)">—</div>
@@ -222,13 +259,59 @@ async function loadTeams() {
   } catch { $('teamSel').innerHTML = '<option value="">Unavailable</option>'; }
 }
 
+let boardCache = [];
+let myNames = new Set();
+
 async function loadBoard() {
   try {
-    const board = await (await fetch('/api/board')).json();
-    $('playerList').innerHTML = board.filter(p => !p.drafted)
+    boardCache = await (await fetch('/api/board')).json();
+    $('playerList').innerHTML = boardCache.filter(p => !p.drafted)
       .map(p => `<option value="${p.name}">`).join('');
+    renderBoard();
   } catch {}
 }
+
+function renderBoard() {
+  const q = $('boardSearch').value.trim().toLowerCase();
+  const rows = boardCache
+    .filter(p => !q || p.name.toLowerCase().includes(q)
+                    || (p.pos || '').toLowerCase() === q
+                    || (p.team || '').toLowerCase() === q)
+    .slice(0, 120);
+
+  $('boardList').innerHTML = rows.map(p => {
+    const mine = myNames.has(p.name);
+    const cls = mine ? 'mine' : (p.drafted ? 'gone' : '');
+    // ↺ restores; ✕ removes. Icon reflects what the tap will do, not current state.
+    const icon = p.drafted ? '↺' : '✕';
+    return `<div class="brow ${cls}">
+      <span class="bn">${p.name}</span>
+      <span class="pos ${p.pos}">${p.pos}</span>
+      <span class="brk">#${p.rank}</span>
+      <button class="btog" data-name="${p.name.replace(/"/g, '&quot;')}"
+              data-drafted="${p.drafted ? '1' : '0'}">${icon}</button>
+    </div>`;
+  }).join('') || '<div class="brow"><span class="bn" style="color:var(--dim)">No match on the board</span></div>';
+
+  $('boardList').querySelectorAll('.btog').forEach(b => {
+    b.onclick = async () => {
+      const name = b.dataset.name;
+      const isDrafted = b.dataset.drafted === '1';
+      b.disabled = true;
+      const url = isDrafted
+        ? '/api/undraft/' + encodeURIComponent(name)
+        : `/api/manual-pick/${encodeURIComponent(name)}?mine=false`;
+      const j = await (await fetch(url, {method: 'POST'})).json();
+      $('manualMsg').textContent = j.error
+        ? j.error
+        : (isDrafted ? `${j.restored} back on the board` : `${j.marked} off the board`);
+      await loadBoard();
+      tick();
+    };
+  });
+}
+
+$('boardSearch').oninput = renderBoard;
 
 function renderRecs(rec, watchShown) {
   const ol = $('recs'), empty = $('recsEmpty');
@@ -292,6 +375,10 @@ async function tick() {
   $('counts').innerHTML = ['QB','RB','WR','TE']
     .map(p => `<span class="chip ${unmet[p] ? 'need' : ''}">${p} ${counts[p] || 0}${unmet[p] ? ` (need ${unmet[p]})` : ''}</span>`)
     .join('');
+
+  // Track which drafted players are mine, so the board can distinguish
+  // "gone to someone else" from "on my roster".
+  myNames = new Set((s.roster || []).map(p => p.name));
 
   $('roster').innerHTML = (s.roster && s.roster.length)
     ? s.roster.map(p => `<div class="roster-row"><span>${p.name}</span><span class="rp">${p.position} · ${p.team}</span></div>`).join('')
@@ -380,6 +467,33 @@ $('refreshBtn').onclick = async () => {
   $('manualMsg').textContent = 'Recomputing…';
   await fetch('/api/refresh', {method: 'POST'});
   $('manualMsg').textContent = '';
+  tick();
+};
+
+$('newsBtn').onclick = async () => {
+  const btn = $('newsBtn'), out = $('newsOut');
+  btn.disabled = true; btn.textContent = 'Searching…';
+  out.innerHTML = '<span style="color:var(--dim)">Checking for injuries and roster changes…</span>';
+  try {
+    const j = await (await fetch('/api/news', {method: 'POST'})).json();
+    if (j.error) {
+      out.innerHTML = `<span style="color:var(--bad)">${j.error}</span>`;
+    } else {
+      const changes = (j.applied || []).length
+        ? '<ul style="margin:8px 0 0;padding-left:18px">' +
+          j.applied.map(a => `<li>${a}</li>`).join('') + '</ul>'
+        : '<div style="color:var(--dim);margin-top:6px">No board changes applied.</div>';
+      const gone = (j.out_for_season || []).length
+        ? `<div style="color:var(--bad);margin-top:8px">Removed from board: ${j.out_for_season.join(', ')}</div>`
+        : '';
+      out.innerHTML = `<div>${j.summary || ''}</div>${changes}${gone}
+        <div style="color:var(--dim);margin-top:8px;font-size:12.5px">Checked ${j.searched_at || ''}</div>`;
+    }
+  } catch (e) {
+    out.innerHTML = '<span style="color:var(--bad)">Request failed.</span>';
+  }
+  btn.disabled = false; btn.textContent = 'Get Latest';
+  await loadBoard();
   tick();
 };
 
