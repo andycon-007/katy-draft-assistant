@@ -12,10 +12,8 @@ personal and single-league use.
 
 ## Field values
 
-**Client ID**
-```
-dj0yJmk9UnlOUFY5cm9wbEFxJmQ9WVdrOVVta3haRVJSUWxjbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PWFj
-```
+**Client ID** — copy from your local `.env` (`YAHOO_CLIENT_ID`), or from
+developer.yahoo.com/apps. Deliberately not recorded here, since this file is public.
 
 **Estimated number of users:** Small (fewer than 1,000) — realistically **1**
 
