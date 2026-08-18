@@ -76,19 +76,21 @@
     gap: 14px; padding: 14px 16px; border-bottom: 1px solid var(--line);
     align-items: start;
   }
-  .acts { display: flex; flex-direction: column; gap: 7px; }
+  .acts { display: flex; flex-direction: column; gap: 10px; }
+  /* Sized for a thumb against a running draft clock — these are the primary controls. */
   .act {
-    width: 46px; height: 40px; border-radius: 9px; cursor: pointer;
-    border: 1px solid var(--line); background: var(--panel-2);
-    font-size: 17px; line-height: 1; display: flex; align-items: center; justify-content: center;
+    width: 62px; height: 56px; border-radius: 12px; cursor: pointer;
+    border: 2px solid var(--line); background: var(--panel-2);
+    font-size: 30px; font-weight: 800; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
   }
-  .act:disabled { opacity: .4; }
-  .act.gone { color: var(--dim); }
-  .act.gone:active { background: #3a1f22; color: #ff9e9e; }
+  .act:disabled { opacity: .35; }
+  .act.gone { color: #ff8f8f; border-color: rgba(255,107,107,.5); }
+  .act.gone:active { background: #3a1f22; border-color: var(--bad); }
   /* Taking a player is the consequential action — give it standing colour, not just
      an active state, so it is never confused with the dismiss button mid-draft. */
-  .act.take { color: var(--good); border-color: rgba(70,200,138,.45); }
-  .act.take:active { background: #1d3a2a; }
+  .act.take { color: var(--good); border-color: rgba(70,200,138,.6); }
+  .act.take:active { background: #1d3a2a; border-color: var(--good); }
   ol.recs li:last-child { border-bottom: 0; }
   ol.recs li::before {
     content: counter(r); font-variant-numeric: tabular-nums;
@@ -158,8 +160,12 @@
   #setupSummary { text-transform: none; letter-spacing: 0; color: var(--text); font-weight: 500; font-size: 13.5px; }
   .syncbox { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
   .synchead { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--dim); }
-  .synchead input { width: 78px; padding: 8px 10px; text-align: center; }
+  .synchead input { width: 68px; padding: 8px 6px; text-align: center; font-variant-numeric: tabular-nums; }
   .synchead button { width: auto; padding: 8px 14px; }
+  .synchead .step {
+    width: 44px; min-width: 44px; padding: 8px 0; font-size: 20px; font-weight: 700;
+    line-height: 1; text-align: center;
+  }
   .behind { color: var(--warn); }
   .tgt { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14px; }
   .tgt:first-child { border-top: 0; }
@@ -251,7 +257,9 @@
           <div class="syncbox">
             <div class="synchead">
               <span>Draft is on pick</span>
+              <button class="step" id="pickDown">−</button>
               <input id="pickNum" type="number" min="1" inputmode="numeric">
+              <button class="step" id="pickUp">+</button>
               <button id="pickSet">Sync</button>
             </div>
             <div class="boardhint" id="syncHint">
@@ -292,16 +300,6 @@
             built, then folds them in. Takes up to a minute — run it before the draft.</div>
           <div id="newsOut" style="margin-top:10px;font-size:14px"></div>
         </div>
-      </div>
-
-      <div class="card" style="margin-bottom:16px">
-        <h2>Board</h2>
-        <div class="body" style="padding-bottom:6px">
-          <input id="boardSearch" placeholder="Filter players…" autocomplete="off"
-                 autocapitalize="off" autocorrect="off">
-          <div class="boardhint">Tap ✕ to take off the board · tap ↺ to put back</div>
-        </div>
-        <div id="boardList" class="boardlist"></div>
       </div>
 
       <div class="card">
@@ -347,53 +345,13 @@ let myNames = new Set();
 async function loadBoard() {
   try {
     boardCache = await (await fetch('/api/board')).json();
+    // Powers autocomplete in Enter Pick. Undrafted only — you can't take someone twice.
     $('playerList').innerHTML = boardCache.filter(p => !p.drafted)
       .map(p => `<option value="${p.name}">`).join('');
-    renderBoard();
   } catch {}
 }
 
-function renderBoard() {
-  const q = $('boardSearch').value.trim().toLowerCase();
-  const rows = boardCache
-    .filter(p => !q || p.name.toLowerCase().includes(q)
-                    || (p.pos || '').toLowerCase() === q
-                    || (p.team || '').toLowerCase() === q)
-    .slice(0, 120);
 
-  $('boardList').innerHTML = rows.map(p => {
-    const mine = myNames.has(p.name);
-    const cls = mine ? 'mine' : (p.drafted ? 'gone' : '');
-    // ↺ restores; ✕ removes. Icon reflects what the tap will do, not current state.
-    const icon = p.drafted ? '↺' : '✕';
-    return `<div class="brow ${cls}">
-      <span class="bn">${p.name}</span>
-      <span class="pos ${p.pos}">${p.pos}</span>
-      <span class="brk">#${p.rank}</span>
-      <button class="btog" data-name="${p.name.replace(/"/g, '&quot;')}"
-              data-drafted="${p.drafted ? '1' : '0'}">${icon}</button>
-    </div>`;
-  }).join('') || '<div class="brow"><span class="bn" style="color:var(--dim)">No match on the board</span></div>';
-
-  $('boardList').querySelectorAll('.btog').forEach(b => {
-    b.onclick = async () => {
-      const name = b.dataset.name;
-      const isDrafted = b.dataset.drafted === '1';
-      b.disabled = true;
-      const url = isDrafted
-        ? '/api/undraft/' + encodeURIComponent(name)
-        : `/api/manual-pick/${encodeURIComponent(name)}?mine=false`;
-      const j = await (await fetch(url, {method: 'POST'})).json();
-      $('manualMsg').textContent = j.error
-        ? j.error
-        : (isDrafted ? `${j.restored} back on the board` : `${j.marked} off the board`);
-      await loadBoard();
-      tick();
-    };
-  });
-}
-
-$('boardSearch').oninput = renderBoard;
 
 function renderRecs(rec, watchShown) {
   const ol = $('recs'), empty = $('recsEmpty');
@@ -580,9 +538,22 @@ async function markPick(mine, allowUnlisted) {
     $('manualMsg').textContent = j.candidates
       ? `${j.error}: ${j.candidates.join(', ')}`
       : j.error;
+  } else if (j.note) {
+    // Already drafted. The board panel used to be the only way to reverse a specific
+    // player; offer it here instead, since a mistake usually surfaces several picks later.
+    $('manualMsg').innerHTML =
+      `${j.note}. <a href="#" id="putback" style="color:var(--accent)">Put back on the board</a>`;
+    $('putback').onclick = async e => {
+      e.preventDefault();
+      const u = await (await fetch('/api/undraft/' + encodeURIComponent(name), {method: 'POST'})).json();
+      $('manualMsg').textContent = u.error ? u.error : `${u.restored} back on the board`;
+      $('manual').value = '';
+      await loadBoard();
+      tick();
+    };
   } else {
-    $('manualMsg').textContent = j.note
-      || `${j.marked}${j.unlisted ? ' (unlisted)' : ''} → ${mine ? 'your roster' : 'off the board'}`;
+    $('manualMsg').textContent =
+      `${j.marked}${j.unlisted ? ' (unlisted)' : ''} → ${mine ? 'your roster' : 'off the board'}`;
     $('manual').value = '';
   }
   await loadBoard();
@@ -593,13 +564,16 @@ $('markOther').onclick = () => markPick(false);
 // Enter defaults to the common case: someone else picked.
 $('manual').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); markPick(false); } };
 
-$('pickSet').onclick = async () => {
-  const v = parseInt($('pickNum').value, 10);
-  if (!v) return;
+async function setPick(v) {
+  if (!v || v < 1) return;
   const j = await (await fetch('/api/current-pick/' + v, {method: 'POST'})).json();
   $('manualMsg').textContent = j.error ? j.error : `Synced to pick ${j.current_pick}`;
   tick();
-};
+}
+$('pickSet').onclick = () => setPick(parseInt($('pickNum').value, 10));
+// Step buttons commit immediately — the point is speed, not a second confirmation tap.
+$('pickUp').onclick   = () => setPick((parseInt($('pickNum').value, 10) || 0) + 1);
+$('pickDown').onclick = () => setPick((parseInt($('pickNum').value, 10) || 2) - 1);
 $('pickNum').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); $('pickSet').click(); } };
 
 $('undoBtn').onclick = async () => {
