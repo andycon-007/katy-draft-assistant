@@ -68,6 +68,23 @@ from then on.
 
 ### 5. Run
 
+**Manual mode — the default path for this league:**
+
+```bash
+MANUAL_MODE=1 .venv/bin/python -m uvicorn src.server:app --host 0.0.0.0 --port 8000
+```
+
+Yahoo denies Fantasy Sports API scope to newly created apps (see *Yahoo API access*
+below), so there is no live pick feed. You type picks as they're announced and every
+downstream feature works identically.
+
+Entry is built for speed: a surname or a few letters is enough (`gibbs` → Jahmyr
+Gibbs). **Enter** marks "someone else took"; the blue button marks it as yours.
+Ambiguous input lists the matches rather than guessing — `williams` returns all four.
+**Undo last** fixes typos.
+
+**If Yahoo access is ever approved**, drop `MANUAL_MODE=1` and it polls automatically:
+
 ```bash
 .venv/bin/python -m uvicorn src.server:app --host 0.0.0.0 --port 8000
 ```
@@ -109,6 +126,24 @@ and everything else keeps working.
 | **Tiers are derived, not sourced** | They're my construction. Most opinionated part of the board. | Sanity-check them yourself. |
 | **Model call is untested** | Built and wired, never executed — no API key was available during development. | Run a mock draft with a real key well before draft day. |
 | **Draft Type still reads "Offline Draft"** | **If it stays that way, Yahoo hosts no draft room and nobody can join.** | Commissioner must schedule the 2026 draft so it flips to Live Standard Draft. |
+| **Yahoo API scope denied** | No live pick feed — manual entry required. | Apply at sports.yahoo.com/developer/access — see `docs/yahoo_api_application.md`. No published timeline. |
+
+## Yahoo API access
+
+OAuth works and a valid token is stored, but every fantasy endpoint returns
+`oauth_problem="additional_authorization_required"`. This is not a misconfiguration:
+Yahoo moved Fantasy Sports API access behind **manual review**, which is why no Fantasy
+permission appears in the developer console (the API Permissions list is empty on both
+the create and edit forms — confirmed on desktop, not a mobile rendering artifact).
+
+Access is requested at **https://sports.yahoo.com/developer/access/**. Read-only access
+is the only kind offered, which is all this tool needs, and personal single-league use
+is explicitly eligible. A prepared application is in `docs/yahoo_api_application.md`.
+
+**Yahoo publishes no approval timeline.** Plan on manual mode for draft day and treat
+approval as an upgrade if it lands. If approved, the Access and Use Agreement requires
+displaying *"Fantasy data provided by Yahoo Fantasy"* with the official logo — that
+attribution must be added to `static/index.html` before using live Yahoo data.
 
 ## Pre-draft checklist
 

@@ -29,6 +29,11 @@ from .recommend import Recommender
 
 MOCK_MODE = os.getenv("MOCK_MODE", "0") == "1"
 
+# MANUAL_MODE is the primary mode for this league. Yahoo denies Fantasy Sports API
+# scope to newly created apps, so there is no live pick feed to poll — you enter picks
+# as they're announced and everything downstream works unchanged.
+MANUAL_MODE = os.getenv("MANUAL_MODE", "0") == "1"
+
 settings = Settings.load()
 rankings = load_rankings()
 league = load_league_settings()
@@ -156,7 +161,10 @@ async def poll_loop() -> None:
     while True:
         try:
             async with _lock:
-                if MOCK_MODE:
+                if MANUAL_MODE:
+                    # No external feed. State advances only via /api/manual-pick.
+                    _cache["connected"] = True
+                elif MOCK_MODE:
                     await mock_tick()
                 else:
                     await poll_yahoo()
@@ -200,6 +208,7 @@ async def status() -> JSONResponse:
     return JSONResponse(
         {
             "mock_mode": MOCK_MODE,
+            "manual_mode": MANUAL_MODE,
             "connected": _cache["connected"],
             "poll_error": _cache["poll_error"],
             "config_missing": settings.missing(),
@@ -243,6 +252,9 @@ async def set_team(team_key: str) -> JSONResponse:
 
 @app.get("/api/teams")
 async def list_teams() -> JSONResponse:
+    if MANUAL_MODE:
+        # No Yahoo access; "your team" is implied by which picks you flag as yours.
+        return JSONResponse([{"team_key": MANUAL_TEAM_KEY, "name": "My team (manual)"}])
     if MOCK_MODE:
         return JSONResponse(
             [{"team_key": f"mock.t.{i}", "name": f"Mock Team {i}"} for i in range(1, state.teams + 1)]
@@ -258,27 +270,52 @@ async def list_teams() -> JSONResponse:
         return JSONResponse({"error": str(exc)}, status_code=500)
 
 
-@app.post("/api/manual-pick/{name}")
-async def manual_pick(name: str) -> JSONResponse:
-    """Manually mark a player drafted — the override for when polling lags.
+MANUAL_TEAM_KEY = "manual.me"
 
-    Yahoo's feed can trail the room by a pick or two. When you're on the clock and
-    know someone is gone, this corrects the board without waiting for the poll.
+
+@app.post("/api/manual-pick/{name}")
+async def manual_pick(name: str, mine: bool = False) -> JSONResponse:
+    """Mark a player drafted. `mine=true` also adds them to your roster.
+
+    In manual mode this is the only way state advances, so the distinction matters:
+    without it, roster tracking and need-weighting have nothing to work from.
+
+    Matching is fuzzy on purpose — typing full names on an iPad while a draft clock
+    runs is error-prone, so a unique prefix or surname is accepted.
     """
     key = normalize_name(name)
-    match = next(
-        (p for p in rankings["players"] if normalize_name(p["name"]) == key), None
-    )
+    players = rankings["players"]
+
+    match = next((p for p in players if normalize_name(p["name"]) == key), None)
+    if match is None:
+        # Fall back to substring matching, but only if it's unambiguous.
+        partial = [p for p in players if key and key in normalize_name(p["name"])]
+        undrafted = [p for p in partial if normalize_name(p["name"]) not in state.drafted_keys]
+        pool = undrafted or partial
+        if len(pool) == 1:
+            match = pool[0]
+        elif len(pool) > 1:
+            return JSONResponse(
+                {
+                    "error": f"'{name}' matches {len(pool)} players — be more specific",
+                    "candidates": [p["name"] for p in pool[:6]],
+                },
+                status_code=409,
+            )
+
     if match is None:
         return JSONResponse({"error": f"'{name}' not on the board"}, status_code=404)
-    if key in state.drafted_keys:
-        return JSONResponse({"ok": True, "note": "already marked drafted"})
+    if normalize_name(match["name"]) in state.drafted_keys:
+        return JSONResponse({"ok": True, "note": f"{match['name']} already marked drafted"})
+
+    if mine and state.my_team_key is None:
+        state.my_team_key = MANUAL_TEAM_KEY
 
     state.drafted.append(
         {
             "pick": len(state.drafted) + 1,
             "round": state.current_round,
-            "team_key": "manual",
+            "team_key": MANUAL_TEAM_KEY if mine else "manual.other",
             "player_key": f"manual.{match['rank']}",
             "name": match["name"],
             "position": match["pos"],
@@ -286,7 +323,17 @@ async def manual_pick(name: str) -> JSONResponse:
         }
     )
     _cache["computed_for_pick"] = None
-    return JSONResponse({"ok": True, "marked": match["name"]})
+    return JSONResponse({"ok": True, "marked": match["name"], "mine": mine})
+
+
+@app.post("/api/undo")
+async def undo_last() -> JSONResponse:
+    """Remove the most recent pick. Manual entry means typos, so this is essential."""
+    if not state.drafted:
+        return JSONResponse({"error": "nothing to undo"}, status_code=400)
+    removed = state.drafted.pop()
+    _cache["computed_for_pick"] = None
+    return JSONResponse({"ok": True, "removed": removed["name"]})
 
 
 @app.post("/api/refresh")

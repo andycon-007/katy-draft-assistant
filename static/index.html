@@ -161,14 +161,19 @@
         </div>
       </div>
 
-      <div class="card" style="margin-bottom:16px">
-        <h2>Mark Drafted</h2>
+      <div class="card" id="entryCard" style="margin-bottom:16px">
+        <h2>Enter Pick</h2>
         <div class="body">
-          <label for="manual">Use when Yahoo's feed lags and you know someone is gone</label>
-          <input id="manual" list="playerList" placeholder="Type a player name…" autocomplete="off">
+          <label for="manual">Surname or a few letters is enough</label>
+          <input id="manual" list="playerList" placeholder="e.g. gibbs" autocomplete="off"
+                 autocapitalize="off" autocorrect="off" enterkeyhint="done">
           <datalist id="playerList"></datalist>
           <div class="row" style="margin-top:8px">
-            <button class="primary" id="markBtn">Mark drafted</button>
+            <button id="markOther">Someone else took</button>
+            <button class="primary" id="markMine">I took this</button>
+          </div>
+          <div class="row" style="margin-top:8px">
+            <button id="undoBtn">Undo last</button>
             <button id="refreshBtn">Recompute</button>
           </div>
           <div id="manualMsg" style="font-size:13.5px;color:var(--dim);margin-top:8px"></div>
@@ -257,6 +262,7 @@ async function tick() {
 
   $('banners').innerHTML = '';
   if (s.mock_mode) banner('MOCK MODE — simulated draft, not live Yahoo data.', 'warn');
+  if (s.manual_mode) banner('MANUAL MODE — enter each pick as it is announced.', 'warn');
   if (s.config_missing && s.config_missing.length)
     banner('Missing config: ' + s.config_missing.join(', ') + ' — see README.', 'err');
   if (s.poll_error) banner('Poll error: ' + s.poll_error, 'err');
@@ -326,13 +332,35 @@ $('teamSel').onchange = async e => {
   await fetch('/api/team/' + encodeURIComponent(e.target.value), {method: 'POST'});
   tick();
 };
-$('markBtn').onclick = async () => {
+async function markPick(mine) {
   const name = $('manual').value.trim();
   if (!name) return;
-  const r = await fetch('/api/manual-pick/' + encodeURIComponent(name), {method: 'POST'});
+  const r = await fetch(
+    `/api/manual-pick/${encodeURIComponent(name)}?mine=${mine ? 'true' : 'false'}`,
+    {method: 'POST'}
+  );
   const j = await r.json();
-  $('manualMsg').textContent = j.error ? j.error : `Marked ${j.marked || name} drafted`;
-  $('manual').value = '';
+  if (j.error) {
+    // Ambiguous surnames are common (two Williamses, two Warrens) — show the options.
+    $('manualMsg').textContent = j.candidates
+      ? `${j.error}: ${j.candidates.join(', ')}`
+      : j.error;
+  } else {
+    $('manualMsg').textContent = j.note
+      || `${j.marked} → ${mine ? 'your roster' : 'off the board'}`;
+    $('manual').value = '';
+  }
+  tick();
+}
+$('markMine').onclick = () => markPick(true);
+$('markOther').onclick = () => markPick(false);
+// Enter defaults to the common case: someone else picked.
+$('manual').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); markPick(false); } };
+
+$('undoBtn').onclick = async () => {
+  const r = await fetch('/api/undo', {method: 'POST'});
+  const j = await r.json();
+  $('manualMsg').textContent = j.error ? j.error : `Removed ${j.removed}`;
   tick();
 };
 $('refreshBtn').onclick = async () => {
