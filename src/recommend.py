@@ -19,7 +19,7 @@ from typing import Any
 import anthropic
 
 from .config import Settings
-from .draft_state import DraftState, candidate_pool
+from .draft_state import DraftState, candidate_pool, normalize_name
 
 RECOMMENDATION_SCHEMA: dict[str, Any] = {
     "type": "object",
@@ -242,7 +242,11 @@ class Recommender:
                 {
                     "type": "text",
                     "text": self._system,
-                    "cache_control": {"type": "ephemeral"},
+                    # 1-hour TTL, not the 5-minute default. In a 10-team draft your
+                    # picks are ~10 minutes apart, so a 5m cache expires between every
+                    # turn and each call re-pays for the whole board. The 1h write costs
+                    # 2x once and then reads at 0.1x for the rest of the draft.
+                    "cache_control": {"type": "ephemeral", "ttl": "1h"},
                 }
             ],
             messages=[
@@ -273,6 +277,8 @@ class Recommender:
                 "raw": text[:500],
             }
 
+        result = self._reconcile(result, pool)
+
         result["usage"] = {
             "input_tokens": response.usage.input_tokens,
             "output_tokens": response.usage.output_tokens,
@@ -280,4 +286,42 @@ class Recommender:
             "cache_write": getattr(response.usage, "cache_creation_input_tokens", 0),
         }
         result["board_exhausted"] = False
+        return result
+
+    @staticmethod
+    def _reconcile(result: dict, pool: list[dict]) -> dict:
+        """Overwrite model-supplied facts with authoritative board values.
+
+        The model is asked to reason, not to remember. Position, team, and bye are
+        known exactly from the board, so trusting the model's copy of them just
+        invites errors — an observed run labelled Derrick Henry a WR while correctly
+        describing his rushing volume. Anything the model names that isn't in the
+        candidate pool is dropped outright: recommending an already-drafted player is
+        the one failure that would actively cost you a pick.
+        """
+        by_name = {normalize_name(p["name"]): p for p in pool}
+        cleaned, dropped = [], []
+
+        for item in result.get("recommendations", []):
+            board = by_name.get(normalize_name(item.get("name", "")))
+            if board is None:
+                dropped.append(item.get("name", "?"))
+                continue
+            cleaned.append(
+                {
+                    **item,
+                    "name": board["name"],          # canonical spelling
+                    "position": board.get("pos", item.get("position", "")),
+                    "team": board.get("team", item.get("team", "")),
+                    "bye": board.get("bye"),
+                    "tier": board.get("tier"),
+                    "board_rank": board.get("rank"),
+                }
+            )
+
+        result["recommendations"] = cleaned
+        if dropped:
+            # Surface rather than swallow — a recurring pattern here means the prompt
+            # is drifting outside the supplied candidate list.
+            result["dropped_invalid"] = dropped
         return result

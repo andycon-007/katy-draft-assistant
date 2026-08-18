@@ -66,6 +66,8 @@
 
   .note { padding: 10px 16px; font-size: 15px; border-bottom: 1px solid var(--line); }
   .note.watch { color: var(--warn); background: rgba(245,166,35,.07); }
+  .note.stale { color: var(--warn); background: rgba(245,166,35,.13); font-weight: 600; }
+  ol.recs.stale { opacity: .45; }
   .note.read { color: var(--dim); }
 
   ol.recs { list-style: none; margin: 0; padding: 0; counter-reset: r; }
@@ -139,6 +141,7 @@
   <div class="grid">
     <div class="card">
       <h2>Recommendations</h2>
+      <div class="note stale" id="staleNote" hidden>Recomputing for the current board…</div>
       <div class="note read" id="rosterRead" hidden></div>
       <div class="note watch" id="watch" hidden></div>
       <ol class="recs" id="recs"></ol>
@@ -301,6 +304,12 @@ async function tick() {
   // Reflect server-side state in the controls, so a reload doesn't look unconfigured.
   if (d.slot != null && $('slotSel').value !== String(d.slot)) $('slotSel').value = String(d.slot);
   if (d.my_team_key && $('teamSel').value !== d.my_team_key) $('teamSel').value = d.my_team_key;
+
+  // Stale = the cached result predates the current board. Dim it and say so, so a
+  // half-second glance can't mistake it for current advice.
+  const stale = !!s.recommendations_stale;
+  $('staleNote').hidden = !stale;
+  $('recs').classList.toggle('stale', stale);
 
   const rec = s.recommendations;
   $('rosterRead').hidden = !(rec && rec.roster_read);

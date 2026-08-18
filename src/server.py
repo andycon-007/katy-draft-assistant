@@ -202,13 +202,38 @@ async def index() -> FileResponse:
     return FileResponse(STATIC_DIR / "index.html")
 
 
+def _fresh_recommendations() -> tuple[dict | None, bool]:
+    """Return (recommendations, stale).
+
+    A model call takes ~30s, so after each pick there is a window where the cached
+    result predates the current board. Serving it unchanged risks recommending a
+    player who was just taken — the one failure that actively costs you a pick. So we
+    both flag staleness and defensively strip anyone now drafted, rather than trusting
+    the recompute to land before the user looks.
+    """
+    rec = _cache["recommendations"]
+    stale = _cache["computed_for_pick"] != state.next_pick_number
+    if not rec or not rec.get("recommendations"):
+        return rec, stale
+
+    taken = state.drafted_keys
+    filtered = [
+        r for r in rec["recommendations"] if normalize_name(r.get("name", "")) not in taken
+    ]
+    if len(filtered) != len(rec["recommendations"]):
+        rec = {**rec, "recommendations": filtered}
+    return rec, stale
+
+
 @app.get("/api/status")
 async def status() -> JSONResponse:
     until = state.picks_until_my_turn()
+    recommendations, stale = _fresh_recommendations()
     return JSONResponse(
         {
             "mock_mode": MOCK_MODE,
             "manual_mode": MANUAL_MODE,
+            "recommendations_stale": stale,
             "connected": _cache["connected"],
             "poll_error": _cache["poll_error"],
             "config_missing": settings.missing(),
@@ -228,7 +253,7 @@ async def status() -> JSONResponse:
             "position_counts": state.position_counts(),
             "unmet_starters": state.unmet_starters(),
             "recent_picks": state.drafted[-10:],
-            "recommendations": _cache["recommendations"],
+            "recommendations": recommendations,
         }
     )
 

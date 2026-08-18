@@ -42,7 +42,9 @@ class Settings:
             league_id=os.getenv("YAHOO_LEAGUE_ID", "878541"),
             poll_interval_seconds=float(os.getenv("POLL_INTERVAL_SECONDS", "8")),
             model=os.getenv("ANTHROPIC_MODEL", "claude-opus-5"),
-            effort=os.getenv("ANTHROPIC_EFFORT", "high"),
+            # medium, not high: measured at ~25s vs ~39s per call for materially the
+            # same recommendations, and a Yahoo draft clock is only 60-90 seconds.
+            effort=os.getenv("ANTHROPIC_EFFORT", "medium"),
         )
 
     def missing(self) -> list[str]:
