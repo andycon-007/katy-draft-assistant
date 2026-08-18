@@ -24,6 +24,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from .config import STATIC_DIR, Settings, load_league_settings, load_rankings
+from .valuation import build_valuation
 from .draft_state import (
     DraftState,
     analyze_target,
@@ -43,6 +44,9 @@ MANUAL_MODE = os.getenv("MANUAL_MODE", "0") == "1"
 settings = Settings.load()
 rankings = load_rankings()
 league = load_league_settings()
+# Static for the session: derived from the board and scoring rules, neither of
+# which changes mid-draft. Built once rather than per request.
+valuation = build_valuation(rankings, league)
 
 state = DraftState(
     teams=int(os.getenv("LEAGUE_TEAMS", "10")),
@@ -317,7 +321,9 @@ async def status() -> JSONResponse:
             "recommendations": recommendations,
             "news": _cache.get("news"),
             "targets": [analyze_target(rankings, state, t) for t in state.targets],
-            "scarcity": positional_scarcity(rankings, state, state.next_pick_number),
+            "scarcity": positional_scarcity(
+                rankings, state, state.next_pick_number, valuation=valuation
+            ),
         }
     )
 

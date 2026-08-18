@@ -19,6 +19,7 @@ from typing import Any
 import anthropic
 
 from .config import Settings
+from .valuation import build_valuation
 from .draft_state import (
     DraftState,
     analyze_target,
@@ -214,28 +215,39 @@ their availability is worth a glance before committing."""
     if scarcity:
         lines = []
         for r in scarcity:
-            drop = r.get("drop_off", 0)
             if r.get("best_at_next_pick") is None:
                 lines.append(
                     f"  - {r['pos']}: nothing projected to survive to your next pick. "
-                    f"Best now is {r['best_now']} (#{r['best_now_rank']}). Maximum urgency."
+                    f"Best now is {r['best_now']}. Maximum urgency."
+                )
+                continue
+            pts = r.get("drop_off_points")
+            if pts is not None:
+                lines.append(
+                    f"  - {r['pos']}: {r['best_now']} (~{r.get('best_now_points')} pts) now vs "
+                    f"{r['best_at_next_pick']} (~{r.get('best_at_next_points')} pts) at your next "
+                    f"pick — waiting costs about {pts} POINTS. "
+                    f"({r.get('drop_off_ranks', 0)} ranks, ~{r.get('likely_gone_between', 0)} gone in between.)"
                 )
             else:
                 lines.append(
-                    f"  - {r['pos']}: best now {r['best_now']} (#{r['best_now_rank']}, tier "
-                    f"{r['best_now_tier']}) vs {r['best_at_next_pick']} (#{r['best_at_next_rank']}, "
-                    f"tier {r['best_at_next_tier']}) at your next pick — drop-off {drop} ranks, "
-                    f"{r.get('tier_drop', 0)} tiers, ~{r.get('likely_gone_between', 0)} gone in between."
+                    f"  - {r['pos']}: {r['best_now']} now vs {r['best_at_next_pick']} at your next "
+                    f"pick — {r.get('drop_off_ranks', 0)} ranks of decay."
                 )
         scarcity_txt = f"""
 
-## What waiting actually costs, by position
+## What waiting actually costs, by position — IN POINTS
 
-This is computed from the board, not estimated. It is the single most important input
-for THIS pick: an unfilled starting slot is not urgent if the position barely degrades
-before your next turn, and a position you are already deep at can still be worth taking
-if it falls off a cliff. Weigh drop-off at least as heavily as unmet need, and say which
-position is genuinely urgent in positional_watch.
+Measured off 2025 scoring curves for this league, not estimated. This is the most
+important input for THIS pick, and it is deliberately expressed in points rather than
+ranks because ranks are not comparable across positions: in this league running back
+falls roughly three times as steeply per rank as tight end. A position you are short at
+is not urgent if waiting costs few points, and a position you are deep at can still be
+worth taking if it falls off a cliff.
+
+Weigh points lost at least as heavily as unmet need, and name the genuinely urgent
+position in positional_watch. Quote the point figures — they are more persuasive and
+more honest than tier language.
 
 {chr(10).join(lines)}"""
 
@@ -278,6 +290,20 @@ Last picks made:
 Return exactly {count} recommendations, best first, drawn only from the candidate list above."""
 
 
+def _valuation_fields(valuation: dict | None, name: str) -> dict:
+    """Points context for display. Never used to order recommendations."""
+    if not valuation:
+        return {}
+    v = valuation.get(normalize_name(name))
+    if not v:
+        return {}
+    return {
+        "measured_points": v.get("measured_points"),
+        "measured_vor": v.get("measured_vor"),
+        "value_confidence": v.get("confidence"),
+    }
+
+
 class Recommender:
     def __init__(self, settings: Settings, rankings: dict, league: dict):
         self.settings = settings
@@ -292,6 +318,7 @@ class Recommender:
             else anthropic.Anthropic()
         )
         self._system = build_system_prompt(rankings, league)
+        self._valuation = build_valuation(rankings, league)
 
     def recommend(
         self, state: DraftState, pick_number: int | None = None, count: int = 10
@@ -315,7 +342,9 @@ class Recommender:
         targets = [
             analyze_target(self.rankings, state, t) for t in getattr(state, "targets", [])
         ]
-        scarcity = positional_scarcity(self.rankings, state, pick)
+        scarcity = positional_scarcity(
+            self.rankings, state, pick, valuation=self._valuation
+        )
 
         response = self.client.messages.create(
             model=self.settings.model,
@@ -364,7 +393,7 @@ class Recommender:
                 "raw": text[:500],
             }
 
-        result = self._reconcile(result, pool)
+        result = self._reconcile(result, pool, self._valuation)
 
         result["usage"] = {
             "input_tokens": response.usage.input_tokens,
@@ -376,7 +405,7 @@ class Recommender:
         return result
 
     @staticmethod
-    def _reconcile(result: dict, pool: list[dict]) -> dict:
+    def _reconcile(result: dict, pool: list[dict], valuation: dict | None = None) -> dict:
         """Overwrite model-supplied facts with authoritative board values.
 
         The model is asked to reason, not to remember. Position, team, and bye are
@@ -404,6 +433,7 @@ class Recommender:
                     "tier": board.get("tier"),
                     "board_rank": board.get("rank"),
                     "verify_available": board.get("verify_available", False),
+                    **_valuation_fields(valuation, board["name"]),
                 }
             )
 

@@ -599,11 +599,16 @@ $('refreshBtn').onclick = async () => {
 function renderScarcity(rows) {
   if (!rows || !rows.length) { $('scarcity').innerHTML = ''; return; }
   $('scarcity').innerHTML = rows.map(r => {
-    const d = r.drop_off ?? 0;
-    // Classed by what waiting costs, not by whether you need the position.
-    const cls = (r.best_at_next_pick === null || d >= 25) ? 'urgent'
-              : d >= 10 ? 'soon' : 'safe';
-    const val = r.best_at_next_pick === null ? 'none left' : `−${d}`;
+    const pts = r.drop_off_points;
+    const usingPts = pts !== null && pts !== undefined;
+    const d = usingPts ? pts : (r.drop_off ?? 0);
+    // Thresholds are in POINTS when we have them — a 20-point swing is a real
+    // week-winning gap, whereas 20 ranks can be almost nothing at a flat position.
+    const hi = usingPts ? 25 : 25, mid = usingPts ? 10 : 10;
+    const cls = (r.best_at_next_pick === null || d >= hi) ? 'urgent'
+              : d >= mid ? 'soon' : 'safe';
+    const val = r.best_at_next_pick === null ? 'none left'
+              : (usingPts ? `−${d} pts` : `−${d}`);
     const need = r.starters_needed ? ` · need ${r.starters_needed}` : '';
     return `<div class="sc ${cls}">
       <div class="scp">${r.pos}${need}</div>

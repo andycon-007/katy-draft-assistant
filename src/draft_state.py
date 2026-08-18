@@ -352,18 +352,27 @@ def candidate_pool(
 
 
 def positional_scarcity(
-    rankings: dict, state: DraftState, pick_number: int, next_pick: int | None = None
+    rankings: dict,
+    state: DraftState,
+    pick_number: int,
+    next_pick: int | None = None,
+    valuation: dict | None = None,
 ) -> list[dict]:
-    """Per position: what does waiting until your next pick actually cost?
+    """Per position: what does waiting until your next pick actually cost, in POINTS?
 
-    This is the question a need multiplier cannot answer. "I need a TE" says nothing
-    about whether waiting is fine; "the best TE now is 40 ranks better than the best
-    TE that survives to my next pick" says spend the pick here. Positions are returned
-    sorted by that drop-off, steepest first.
+    A need multiplier says what you lack; this says what disappears. The distinction
+    decides picks: an unfilled TE slot is not urgent if the best TE still there next
+    turn scores nearly the same.
 
-    The estimate assumes players leave the board roughly in board order. That is
-    imperfect — runs and reaches happen — but it is the same assumption the whole
-    candidate pool rests on, and it is far better than ignoring scarcity entirely.
+    Ranks are the wrong currency for that comparison. A 13-rank slide at tight end and
+    an 8-rank slide at receiver are not the same loss, because the positions have very
+    different point curves — in this league RB falls about three times as steeply as TE
+    per rank. When `valuation` is supplied, drop-off is measured in points off those
+    curves; without it we fall back to rank distance, which is better than nothing but
+    not comparable across positions.
+
+    Players are assumed to leave the board roughly in board order. Imperfect — runs and
+    reaches happen — but it is the same assumption the candidate pool already rests on.
     """
     avail = available_players(rankings, state)
 
@@ -381,40 +390,59 @@ def positional_scarcity(
         if not pool:
             continue
 
+        def points_for(player: dict) -> float | None:
+            if not valuation:
+                return None
+            v = valuation.get(normalize_name(player["name"]))
+            return v.get("estimated_points") if v else None
+
         best_now = pool[0]
         row = {
             "pos": pos,
             "best_now": best_now["name"],
             "best_now_rank": best_now["rank"],
             "best_now_tier": best_now.get("tier"),
+            "best_now_points": points_for(best_now),
             "starters_needed": state.unmet_starters().get(pos, 0),
+            "units": "points" if valuation else "ranks",
         }
 
         if next_pick is None:
-            row.update(drop_off=0, best_at_next_pick=None, note="No further picks.")
+            row.update(drop_off=0, drop_off_ranks=0, best_at_next_pick=None,
+                       note="No further picks.")
             rows.append(row)
             continue
 
-        # Who of this position plausibly survives to your next turn.
         survivors = [p for p in pool if p["rank"] >= next_pick]
-        # How many of this position are likely gone in between — the run risk.
         gone_between = len([p for p in pool if p["rank"] < next_pick])
 
         if survivors:
             nxt = survivors[0]
+            now_pts, next_pts = points_for(best_now), points_for(nxt)
+            pts_drop = (
+                round(now_pts - next_pts, 1)
+                if now_pts is not None and next_pts is not None
+                else None
+            )
+            rank_drop = nxt["rank"] - best_now["rank"]
             row.update(
                 best_at_next_pick=nxt["name"],
                 best_at_next_rank=nxt["rank"],
                 best_at_next_tier=nxt.get("tier"),
-                drop_off=nxt["rank"] - best_now["rank"],
+                best_at_next_points=next_pts,
+                drop_off_ranks=rank_drop,
+                drop_off_points=pts_drop,
+                # The headline number, in points where we have them.
+                drop_off=pts_drop if pts_drop is not None else rank_drop,
                 tier_drop=(nxt.get("tier") or 0) - (best_now.get("tier") or 0),
                 likely_gone_between=gone_between,
             )
         else:
-            # Nothing at this position survives — maximum urgency.
             row.update(
                 best_at_next_pick=None,
                 drop_off=999,
+                drop_off_ranks=999,
+                drop_off_points=None,
                 tier_drop=99,
                 likely_gone_between=gone_between,
                 note="Nothing at this position is projected to last until your next pick.",
