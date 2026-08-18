@@ -19,7 +19,13 @@ from typing import Any
 import anthropic
 
 from .config import Settings
-from .draft_state import DraftState, analyze_target, candidate_pool, normalize_name
+from .draft_state import (
+    DraftState,
+    analyze_target,
+    candidate_pool,
+    normalize_name,
+    positional_scarcity,
+)
 
 RECOMMENDATION_SCHEMA: dict[str, Any] = {
     "type": "object",
@@ -145,6 +151,7 @@ def build_user_prompt(
     count: int,
     pick_number: int,
     targets: list[dict] | None = None,
+    scarcity: list[dict] | None = None,
 ) -> str:
     """Volatile suffix — everything that changes per call lives here."""
     roster = state.my_roster()
@@ -181,6 +188,36 @@ def build_user_prompt(
         else "Draft slot not set."
     )
 
+
+    scarcity_txt = ""
+    if scarcity:
+        lines = []
+        for r in scarcity:
+            drop = r.get("drop_off", 0)
+            if r.get("best_at_next_pick") is None:
+                lines.append(
+                    f"  - {r['pos']}: nothing projected to survive to your next pick. "
+                    f"Best now is {r['best_now']} (#{r['best_now_rank']}). Maximum urgency."
+                )
+            else:
+                lines.append(
+                    f"  - {r['pos']}: best now {r['best_now']} (#{r['best_now_rank']}, tier "
+                    f"{r['best_now_tier']}) vs {r['best_at_next_pick']} (#{r['best_at_next_rank']}, "
+                    f"tier {r['best_at_next_tier']}) at your next pick — drop-off {drop} ranks, "
+                    f"{r.get('tier_drop', 0)} tiers, ~{r.get('likely_gone_between', 0)} gone in between."
+                )
+        scarcity_txt = f"""
+
+## What waiting actually costs, by position
+
+This is computed from the board, not estimated. It is the single most important input
+for THIS pick: an unfilled starting slot is not urgent if the position barely degrades
+before your next turn, and a position you are already deep at can still be worth taking
+if it falls off a cliff. Weigh drop-off at least as heavily as unmet need, and say which
+position is genuinely urgent in positional_watch.
+
+{chr(10).join(lines)}"""
+
     targets_txt = ""
     if targets:
         lines = []
@@ -211,7 +248,7 @@ Unfilled starting slots: {state.unmet_starters() or 'none — all starters cover
 Last picks made:
 {recent_txt}
 
-{targets_txt}
+{scarcity_txt}{targets_txt}
 
 ## Candidates still available
 
@@ -257,6 +294,7 @@ class Recommender:
         targets = [
             analyze_target(self.rankings, state, t) for t in getattr(state, "targets", [])
         ]
+        scarcity = positional_scarcity(self.rankings, state, pick)
 
         response = self.client.messages.create(
             model=self.settings.model,
@@ -280,7 +318,7 @@ class Recommender:
             messages=[
                 {
                     "role": "user",
-                    "content": build_user_prompt(state, pool, count, pick, targets),
+                    "content": build_user_prompt(state, pool, count, pick, targets, scarcity),
                 }
             ],
         )

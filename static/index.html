@@ -129,6 +129,22 @@
   .row { display: flex; gap: 8px; }
   .row > * { flex: 1; }
 
+  .scarcity {
+    display: flex; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--line);
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+  .sc {
+    flex: 1; min-width: 108px; padding: 8px 10px; border-radius: 9px;
+    background: var(--panel-2); border: 1px solid var(--line);
+  }
+  .sc .scp { font-size: 12px; font-weight: 700; letter-spacing: .04em; }
+  .sc .scd { font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; margin: 1px 0; }
+  .sc .scn { font-size: 11px; color: var(--dim); overflow-wrap: anywhere; }
+  .sc.urgent { border-color: rgba(255,107,107,.55); background: rgba(255,107,107,.10); }
+  .sc.urgent .scd { color: var(--bad); }
+  .sc.soon   { border-color: rgba(245,166,35,.5); background: rgba(245,166,35,.09); }
+  .sc.soon .scd { color: var(--warn); }
+  .sc.safe .scd { color: var(--good); }
   .boardhint { font-size: 12px; color: var(--dim); margin-top: 7px; }
   details.card > summary {
     padding: 12px 16px; font-size: 13px; letter-spacing: .09em; text-transform: uppercase;
@@ -198,6 +214,7 @@
   <div class="grid">
     <div class="card">
       <h2>Recommendations</h2>
+      <div id="scarcity" class="scarcity"></div>
       <div class="note stale" id="staleNote" hidden>Recomputing for the current board…</div>
       <div class="note read" id="rosterRead" hidden></div>
       <div class="note watch" id="watch" hidden></div>
@@ -471,6 +488,7 @@ async function tick() {
   // "gone to someone else" from "on my roster".
   myNames = new Set((s.roster || []).map(p => p.name));
   renderTargets(s.targets);
+  renderScarcity(s.scarcity);
 
   $('roster').innerHTML = (s.roster && s.roster.length)
     ? s.roster.map(p => `<div class="roster-row"><span>${p.name}</span><span class="rp">${p.position} · ${p.team}</span></div>`).join('')
@@ -543,24 +561,31 @@ $('teamSel').onchange = async e => {
   await fetch('/api/team/' + encodeURIComponent(e.target.value), {method: 'POST'});
   tick();
 };
-async function markPick(mine) {
+async function markPick(mine, allowUnlisted) {
   const name = $('manual').value.trim();
   if (!name) return;
-  const r = await fetch(
-    `/api/manual-pick/${encodeURIComponent(name)}?mine=${mine ? 'true' : 'false'}`,
-    {method: 'POST'}
-  );
-  const j = await r.json();
-  if (j.error) {
-    // Ambiguous surnames are common (two Williamses, two Warrens) — show the options.
+  const q = `mine=${mine ? 'true' : 'false'}` + (allowUnlisted ? '&allow_unlisted=true' : '');
+  const j = await (await fetch(
+    `/api/manual-pick/${encodeURIComponent(name)}?${q}`, {method: 'POST'}
+  )).json();
+
+  if (j.error && j.unlisted) {
+    // Not on the board — offer to record anyway rather than dead-ending. Covers
+    // defenses, kickers and deep sleepers nobody ranked.
+    $('manualMsg').innerHTML =
+      `"${name}" isn't on the board. ` +
+      `<a href="#" id="anyway" style="color:var(--accent)">Record ${mine ? 'as my pick' : 'as taken'} anyway</a>`;
+    $('anyway').onclick = async e => { e.preventDefault(); await markPick(mine, true); };
+  } else if (j.error) {
     $('manualMsg').textContent = j.candidates
       ? `${j.error}: ${j.candidates.join(', ')}`
       : j.error;
   } else {
     $('manualMsg').textContent = j.note
-      || `${j.marked} → ${mine ? 'your roster' : 'off the board'}`;
+      || `${j.marked}${j.unlisted ? ' (unlisted)' : ''} → ${mine ? 'your roster' : 'off the board'}`;
     $('manual').value = '';
   }
+  await loadBoard();
   tick();
 }
 $('markMine').onclick = () => markPick(true);
@@ -589,6 +614,23 @@ $('refreshBtn').onclick = async () => {
   $('manualMsg').textContent = '';
   tick();
 };
+
+function renderScarcity(rows) {
+  if (!rows || !rows.length) { $('scarcity').innerHTML = ''; return; }
+  $('scarcity').innerHTML = rows.map(r => {
+    const d = r.drop_off ?? 0;
+    // Classed by what waiting costs, not by whether you need the position.
+    const cls = (r.best_at_next_pick === null || d >= 25) ? 'urgent'
+              : d >= 10 ? 'soon' : 'safe';
+    const val = r.best_at_next_pick === null ? 'none left' : `−${d}`;
+    const need = r.starters_needed ? ` · need ${r.starters_needed}` : '';
+    return `<div class="sc ${cls}">
+      <div class="scp">${r.pos}${need}</div>
+      <div class="scd">${val}</div>
+      <div class="scn">${r.best_now}</div>
+    </div>`;
+  }).join('');
+}
 
 function renderTargets(targets) {
   if (!targets || !targets.length) {

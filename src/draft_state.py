@@ -336,6 +336,80 @@ def candidate_pool(
     return pool
 
 
+def positional_scarcity(
+    rankings: dict, state: DraftState, pick_number: int, next_pick: int | None = None
+) -> list[dict]:
+    """Per position: what does waiting until your next pick actually cost?
+
+    This is the question a need multiplier cannot answer. "I need a TE" says nothing
+    about whether waiting is fine; "the best TE now is 40 ranks better than the best
+    TE that survives to my next pick" says spend the pick here. Positions are returned
+    sorted by that drop-off, steepest first.
+
+    The estimate assumes players leave the board roughly in board order. That is
+    imperfect — runs and reaches happen — but it is the same assumption the whole
+    candidate pool rests on, and it is far better than ignoring scarcity entirely.
+    """
+    avail = available_players(rankings, state)
+
+    if next_pick is None:
+        upcoming = state.my_upcoming_picks(limit=2)
+        after = [p for _, p in upcoming if p > pick_number]
+        next_pick = after[0] if after else None
+
+    rows = []
+    for pos in ("RB", "WR", "TE", "QB"):
+        pool = sorted(
+            (p for p in avail if p.get("pos") == pos and p["rank"] >= pick_number - 6),
+            key=lambda p: p["rank"],
+        )
+        if not pool:
+            continue
+
+        best_now = pool[0]
+        row = {
+            "pos": pos,
+            "best_now": best_now["name"],
+            "best_now_rank": best_now["rank"],
+            "best_now_tier": best_now.get("tier"),
+            "starters_needed": state.unmet_starters().get(pos, 0),
+        }
+
+        if next_pick is None:
+            row.update(drop_off=0, best_at_next_pick=None, note="No further picks.")
+            rows.append(row)
+            continue
+
+        # Who of this position plausibly survives to your next turn.
+        survivors = [p for p in pool if p["rank"] >= next_pick]
+        # How many of this position are likely gone in between — the run risk.
+        gone_between = len([p for p in pool if p["rank"] < next_pick])
+
+        if survivors:
+            nxt = survivors[0]
+            row.update(
+                best_at_next_pick=nxt["name"],
+                best_at_next_rank=nxt["rank"],
+                best_at_next_tier=nxt.get("tier"),
+                drop_off=nxt["rank"] - best_now["rank"],
+                tier_drop=(nxt.get("tier") or 0) - (best_now.get("tier") or 0),
+                likely_gone_between=gone_between,
+            )
+        else:
+            # Nothing at this position survives — maximum urgency.
+            row.update(
+                best_at_next_pick=None,
+                drop_off=999,
+                tier_drop=99,
+                likely_gone_between=gone_between,
+                note="Nothing at this position is projected to last until your next pick.",
+            )
+        rows.append(row)
+
+    rows.sort(key=lambda r: (-(r.get("drop_off") or 0), r["best_now_rank"]))
+    return rows
+
+
 def board_exhausted(rankings: dict, pick_number: int) -> bool:
     """True when the pick has run past the end of the ranked board."""
     max_rank = max(p["rank"] for p in rankings["players"])

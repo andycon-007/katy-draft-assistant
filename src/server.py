@@ -24,7 +24,12 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from .config import STATIC_DIR, Settings, load_league_settings, load_rankings
-from .draft_state import DraftState, analyze_target, normalize_name
+from .draft_state import (
+    DraftState,
+    analyze_target,
+    normalize_name,
+    positional_scarcity,
+)
 from .recommend import Recommender
 
 MOCK_MODE = os.getenv("MOCK_MODE", "0") == "1"
@@ -146,6 +151,14 @@ async def refresh_recommendations() -> None:
         return
     try:
         result = await asyncio.to_thread(recommender().recommend, state, pick, 10)
+
+        # The call takes ~30s. If the board moved while it ran, this result is already
+        # obsolete — publishing it would stamp a stale pick as current and the panel
+        # would sit there claiming to be up to date. Discard and let the next cycle
+        # compute against the board as it actually is now.
+        if state.next_pick_number != pick:
+            return
+
         _cache["recommendations"] = result
         _cache["computed_for_pick"] = pick
     except Exception as exc:  # noqa: BLE001
@@ -171,12 +184,13 @@ async def poll_loop() -> None:
                     await poll_yahoo()
                 _cache["poll_error"] = None
 
-            # Only spend a model call when our pick is close. Recomputing on every
-            # pick in the round is wasted latency and tokens.
-            until = state.picks_until_my_turn()
-            if state.slot is None or until is None or until <= 4:
-                async with _lock:
-                    await refresh_recommendations()
+            # Recompute whenever the board has moved. An earlier version only did this
+            # within 4 picks of your turn to save tokens, but that left the panel
+            # showing a stale recommendation — captioned "recomputing" — for the rest
+            # of the round, which is worse than the cost it saved. computed_for_pick
+            # dedupes, so this is one call per distinct pick, not per poll.
+            async with _lock:
+                await refresh_recommendations()
 
         except Exception as exc:  # noqa: BLE001
             _cache["poll_error"] = str(exc)
@@ -269,6 +283,7 @@ async def status() -> JSONResponse:
             "recommendations": recommendations,
             "news": _cache.get("news"),
             "targets": [analyze_target(rankings, state, t) for t in state.targets],
+            "scarcity": positional_scarcity(rankings, state, state.next_pick_number),
         }
     )
 
@@ -314,7 +329,9 @@ MANUAL_TEAM_KEY = "manual.me"
 
 
 @app.post("/api/manual-pick/{name}")
-async def manual_pick(name: str, mine: bool = False) -> JSONResponse:
+async def manual_pick(
+    name: str, mine: bool = False, allow_unlisted: bool = False, pos: str | None = None
+) -> JSONResponse:
     """Mark a player drafted. `mine=true` also adds them to your roster.
 
     In manual mode this is the only way state advances, so the distinction matters:
@@ -344,7 +361,39 @@ async def manual_pick(name: str, mine: bool = False) -> JSONResponse:
             )
 
     if match is None:
-        return JSONResponse({"error": f"'{name}' not on the board"}, status_code=404)
+        if not allow_unlisted:
+            return JSONResponse(
+                {
+                    "error": f"'{name}' not on the board",
+                    "hint": "Retry with allow_unlisted=true to record them anyway.",
+                    "unlisted": True,
+                },
+                status_code=404,
+            )
+        # Off-board pick — kickers, defenses, deep sleepers. Recorded so pick counting
+        # and roster tracking stay correct; they simply never appear as candidates.
+        if mine and state.my_team_key is None:
+            state.my_team_key = MANUAL_TEAM_KEY
+        state.drafted.append(
+            {
+                "pick": state.next_pick_number,
+                "round": state.current_round,
+                "team_key": MANUAL_TEAM_KEY if mine else "manual.other",
+                "player_key": f"manual.unlisted.{len(state.drafted)}",
+                "name": name,
+                "position": (pos or "?").upper(),
+                "team": "?",
+                "unlisted": True,
+            }
+        )
+        if state.current_pick_override is not None:
+            state.current_pick_override += 1
+        _cache["computed_for_pick"] = None
+        return JSONResponse(
+            {"ok": True, "marked": name, "mine": mine, "unlisted": True,
+             "current_pick": state.next_pick_number}
+        )
+
     if normalize_name(match["name"]) in state.drafted_keys:
         return JSONResponse({"ok": True, "note": f"{match['name']} already marked drafted"})
 
