@@ -54,6 +54,18 @@ class DraftState:
     my_team_key: str | None = None
     targets: list[str] = field(default_factory=list)  # players you specifically want
 
+    # Where the draft actually is, when that differs from what you've entered.
+    #
+    # In a live room you will miss picks — you're talking, someone drafts fast, you
+    # enter two out of order. Inferring position from entry count then makes the app
+    # think it is earlier than it is and it will not tell you you're on the clock.
+    # Setting this re-syncs everything without needing to backfill who was taken.
+    #
+    # It also fixes the candidate pool: the pool excludes anyone ranked well above the
+    # current pick, so a correct pick number filters out players who are surely gone
+    # even when you never entered them.
+    current_pick_override: int | None = None
+
     # ------------------------------------------------------------- derived
 
     @property
@@ -62,7 +74,13 @@ class DraftState:
 
     @property
     def next_pick_number(self) -> int:
+        if self.current_pick_override is not None:
+            return self.current_pick_override
         return self.picks_made + 1
+
+    @property
+    def is_synced_manually(self) -> bool:
+        return self.current_pick_override is not None
 
     @property
     def current_round(self) -> int:

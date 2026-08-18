@@ -200,7 +200,17 @@ app = FastAPI(title="Fantasy Draft Assistant", lifespan=lifespan)
 
 @app.get("/")
 async def index() -> FileResponse:
-    return FileResponse(STATIC_DIR / "index.html")
+    # Safari — and iOS home-screen web apps especially — cache aggressively enough
+    # that UI changes silently fail to appear. This is a single small page served
+    # over LAN/Tailscale, so there is nothing to gain from caching it.
+    return FileResponse(
+        STATIC_DIR / "index.html",
+        headers={
+            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+            "Pragma": "no-cache",
+            "Expires": "0",
+        },
+    )
 
 
 def _fresh_recommendations() -> tuple[dict | None, bool]:
@@ -245,6 +255,8 @@ async def status() -> JSONResponse:
                 "my_team_key": state.my_team_key,
                 "picks_made": state.picks_made,
                 "next_pick": state.next_pick_number,
+                "manually_synced": state.is_synced_manually,
+                "entries_behind": max(0, state.next_pick_number - 1 - state.picks_made),
                 "current_round": state.current_round,
                 "picks_until_my_turn": until,
                 "is_my_turn": until == 0,
@@ -341,7 +353,7 @@ async def manual_pick(name: str, mine: bool = False) -> JSONResponse:
 
     state.drafted.append(
         {
-            "pick": len(state.drafted) + 1,
+            "pick": state.next_pick_number,
             "round": state.current_round,
             "team_key": MANUAL_TEAM_KEY if mine else "manual.other",
             "player_key": f"manual.{match['rank']}",
@@ -350,8 +362,38 @@ async def manual_pick(name: str, mine: bool = False) -> JSONResponse:
             "team": match["team"],
         }
     )
+    # When manually synced, entering a pick advances the counter too — otherwise the
+    # override would freeze the draft in place while entries pile up behind it.
+    if state.current_pick_override is not None:
+        state.current_pick_override += 1
     _cache["computed_for_pick"] = None
-    return JSONResponse({"ok": True, "marked": match["name"], "mine": mine})
+    return JSONResponse(
+        {"ok": True, "marked": match["name"], "mine": mine, "current_pick": state.next_pick_number}
+    )
+
+
+@app.post("/api/current-pick/{pick}")
+async def set_current_pick(pick: int) -> JSONResponse:
+    """Tell the app where the draft actually is.
+
+    Use this when you've missed picks. Everything downstream — whose turn it is, the
+    candidate window, target timing — keys off this rather than off how many players
+    you managed to type in.
+    """
+    total = state.teams * state.rounds
+    if not 1 <= pick <= total + 1:
+        return JSONResponse({"error": f"pick must be 1-{total}"}, status_code=400)
+    state.current_pick_override = pick
+    _cache["computed_for_pick"] = None
+    return JSONResponse({"ok": True, "current_pick": pick})
+
+
+@app.delete("/api/current-pick")
+async def clear_current_pick() -> JSONResponse:
+    """Go back to inferring position from entered picks."""
+    state.current_pick_override = None
+    _cache["computed_for_pick"] = None
+    return JSONResponse({"ok": True, "current_pick": state.next_pick_number})
 
 
 @app.post("/api/undraft/{name}")
@@ -384,6 +426,8 @@ async def undo_last() -> JSONResponse:
     if not state.drafted:
         return JSONResponse({"error": "nothing to undo"}, status_code=400)
     removed = state.drafted.pop()
+    if state.current_pick_override is not None:
+        state.current_pick_override = max(1, state.current_pick_override - 1)
     _cache["computed_for_pick"] = None
     return JSONResponse({"ok": True, "removed": removed["name"]})
 

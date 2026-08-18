@@ -130,6 +130,21 @@
   .row > * { flex: 1; }
 
   .boardhint { font-size: 12px; color: var(--dim); margin-top: 7px; }
+  details.card > summary {
+    padding: 12px 16px; font-size: 13px; letter-spacing: .09em; text-transform: uppercase;
+    color: var(--dim); font-weight: 600; cursor: pointer; list-style: none;
+    display: flex; align-items: center; gap: 8px;
+  }
+  details.card > summary::-webkit-details-marker { display: none; }
+  details.card > summary::after { content: '▸'; margin-left: auto; font-size: 15px; }
+  details.card[open] > summary { border-bottom: 1px solid var(--line); }
+  details.card[open] > summary::after { content: '▾'; }
+  #setupSummary { text-transform: none; letter-spacing: 0; color: var(--text); font-weight: 500; font-size: 13.5px; }
+  .syncbox { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .synchead { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--dim); }
+  .synchead input { width: 78px; padding: 8px 10px; text-align: center; }
+  .synchead button { width: auto; padding: 8px 14px; }
+  .behind { color: var(--warn); }
   .tgt { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14px; }
   .tgt:first-child { border-top: 0; }
   .tgt .th { display: flex; align-items: baseline; gap: 8px; }
@@ -199,17 +214,6 @@
         </div>
       </div>
 
-      <div class="card" style="margin-bottom:16px">
-        <h2>Setup</h2>
-        <div class="body">
-          <label for="slotSel">Draft slot (set once the order is drawn)</label>
-          <select id="slotSel"><option value="">Not set</option></select>
-
-          <label for="teamSel">My Yahoo team</label>
-          <select id="teamSel"><option value="">Loading…</option></select>
-        </div>
-      </div>
-
       <div class="card" id="entryCard" style="margin-bottom:16px">
         <h2>Enter Pick</h2>
         <div class="body">
@@ -226,8 +230,31 @@
             <button id="refreshBtn">Recompute</button>
           </div>
           <div id="manualMsg" style="font-size:13.5px;color:var(--dim);margin-top:8px"></div>
+
+          <div class="syncbox">
+            <div class="synchead">
+              <span>Draft is on pick</span>
+              <input id="pickNum" type="number" min="1" inputmode="numeric">
+              <button id="pickSet">Sync</button>
+            </div>
+            <div class="boardhint" id="syncHint">
+              Fell behind? Set the pick number Yahoo shows and everything re-syncs —
+              you don't have to backfill who was taken.
+            </div>
+          </div>
         </div>
       </div>
+
+      <details class="card" id="setupCard" style="margin-bottom:16px">
+        <summary>Setup <span id="setupSummary"></span></summary>
+        <div class="body">
+          <label for="slotSel">Draft slot (set once the order is drawn)</label>
+          <select id="slotSel"><option value="">Not set</option></select>
+
+          <label for="teamSel">My Yahoo team</label>
+          <select id="teamSel"><option value="">Loading…</option></select>
+        </div>
+      </details>
 
       <div class="card" style="margin-bottom:16px">
         <h2>My Targets</h2>
@@ -278,6 +305,8 @@
 <script>
 const $ = id => document.getElementById(id);
 let lastPick = -1;
+// Once you open or close Setup yourself, stop auto-collapsing it.
+let setupTouched = false;
 
 function banner(msg, kind) {
   const d = document.createElement('div');
@@ -455,6 +484,23 @@ async function tick() {
   if (d.slot != null && $('slotSel').value !== String(d.slot)) $('slotSel').value = String(d.slot);
   if (d.my_team_key && $('teamSel').value !== d.my_team_key) $('teamSel').value = d.my_team_key;
 
+  // Setup collapses itself once configured, and summarises so you can confirm
+  // at a glance without expanding it.
+  const configured = d.slot != null;
+  $('setupSummary').textContent = configured ? `· slot ${d.slot}` : '· not set';
+  if (configured && !setupTouched) $('setupCard').open = false;
+  else if (!configured && !setupTouched) $('setupCard').open = true;
+
+  // Keep the pick box in step unless the user is actively typing in it.
+  if (document.activeElement !== $('pickNum')) $('pickNum').value = d.next_pick;
+  const behind = d.entries_behind || 0;
+  $('syncHint').className = 'boardhint' + (behind > 0 ? ' behind' : '');
+  $('syncHint').textContent = behind > 0
+    ? `${behind} pick${behind > 1 ? 's' : ''} not entered — recommendations still exclude anyone ranked well above pick ${d.next_pick}.`
+    : (d.manually_synced
+        ? 'Synced manually. Entering a pick advances this automatically.'
+        : "Fell behind? Set the pick number Yahoo shows and everything re-syncs — you don't have to backfill who was taken.");
+
   // Stale = the cached result predates the current board. Dim it and say so, so a
   // half-second glance can't mistake it for current advice.
   const stale = !!s.recommendations_stale;
@@ -484,6 +530,8 @@ async function tick() {
 
 $('slotSel').innerHTML = '<option value="">Not set</option>' +
   Array.from({length: 10}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('');
+
+$('setupCard').addEventListener('toggle', () => { setupTouched = true; });
 
 $('slotSel').onchange = async e => {
   if (!e.target.value) return;
@@ -519,6 +567,15 @@ $('markMine').onclick = () => markPick(true);
 $('markOther').onclick = () => markPick(false);
 // Enter defaults to the common case: someone else picked.
 $('manual').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); markPick(false); } };
+
+$('pickSet').onclick = async () => {
+  const v = parseInt($('pickNum').value, 10);
+  if (!v) return;
+  const j = await (await fetch('/api/current-pick/' + v, {method: 'POST'})).json();
+  $('manualMsg').textContent = j.error ? j.error : `Synced to pick ${j.current_pick}`;
+  tick();
+};
+$('pickNum').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); $('pickSet').click(); } };
 
 $('undoBtn').onclick = async () => {
   const r = await fetch('/api/undo', {method: 'POST'});
