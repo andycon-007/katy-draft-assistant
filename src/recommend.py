@@ -19,7 +19,7 @@ from typing import Any
 import anthropic
 
 from .config import Settings
-from .draft_state import DraftState, candidate_pool, normalize_name
+from .draft_state import DraftState, analyze_target, candidate_pool, normalize_name
 
 RECOMMENDATION_SCHEMA: dict[str, Any] = {
     "type": "object",
@@ -139,7 +139,13 @@ Never recommend a player listed as already drafted. Only recommend players from 
 list supplied in the user message."""
 
 
-def build_user_prompt(state: DraftState, pool: list[dict], count: int, pick_number: int) -> str:
+def build_user_prompt(
+    state: DraftState,
+    pool: list[dict],
+    count: int,
+    pick_number: int,
+    targets: list[dict] | None = None,
+) -> str:
     """Volatile suffix — everything that changes per call lives here."""
     roster = state.my_roster()
     roster_txt = (
@@ -175,6 +181,22 @@ def build_user_prompt(state: DraftState, pool: list[dict], count: int, pick_numb
         else "Draft slot not set."
     )
 
+    targets_txt = ""
+    if targets:
+        lines = []
+        for t in targets:
+            lines.append(f"  - {t['name']} [{t['verdict']}]: {t['advice']}")
+        targets_txt = f"""
+
+## Players the user specifically wants
+
+Timing for each has already been computed from positional demand. Respect it: if the
+analysis says a target will likely go undrafted or can be had later, do NOT recommend
+spending this pick on him, and say so plainly if the user seems poised to reach. If a
+target is genuinely at its last safe pick, surface that in positional_watch.
+
+{chr(10).join(lines)}"""
+
     return f"""## Current draft state
 
 Overall pick: {pick_number} (round {state.current_round})
@@ -188,6 +210,8 @@ Unfilled starting slots: {state.unmet_starters() or 'none — all starters cover
 
 Last picks made:
 {recent_txt}
+
+{targets_txt}
 
 ## Candidates still available
 
@@ -230,6 +254,10 @@ class Recommender:
 
         pool = pool[: max(count * 2, 20)]
 
+        targets = [
+            analyze_target(self.rankings, state, t) for t in getattr(state, "targets", [])
+        ]
+
         response = self.client.messages.create(
             model=self.settings.model,
             max_tokens=8000,
@@ -252,7 +280,7 @@ class Recommender:
             messages=[
                 {
                     "role": "user",
-                    "content": build_user_prompt(state, pool, count, pick),
+                    "content": build_user_prompt(state, pool, count, pick, targets),
                 }
             ],
         )

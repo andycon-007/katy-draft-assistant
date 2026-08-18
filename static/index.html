@@ -116,6 +116,17 @@
   .row > * { flex: 1; }
 
   .boardhint { font-size: 12px; color: var(--dim); margin-top: 7px; }
+  .tgt { border-top: 1px solid var(--line); padding: 10px 0; font-size: 14px; }
+  .tgt:first-child { border-top: 0; }
+  .tgt .th { display: flex; align-items: baseline; gap: 8px; }
+  .tgt .tn { font-weight: 650; flex: 1; }
+  .tgt .tx { color: var(--dim); cursor: pointer; padding: 0 4px; }
+  .tgt .ta { margin-top: 4px; color: var(--dim); line-height: 1.45; }
+  .vd { font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 5px; letter-spacing: .03em; }
+  .vd.can_wait, .vd.likely_undrafted { background: #1d3a2a; color: #6ee7a8; }
+  .vd.last_chance { background: #3d2f14; color: #f0c46b; }
+  .vd.reach_now   { background: #3a1f22; color: #ff9e9e; }
+  .vd.not_ranked, .vd.gone, .vd.no_picks_left { background: var(--panel-2); color: var(--dim); }
   .boardlist { max-height: 46vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
   .brow {
     display: flex; align-items: center; gap: 9px; padding: 9px 16px;
@@ -201,6 +212,17 @@
             <button id="refreshBtn">Recompute</button>
           </div>
           <div id="manualMsg" style="font-size:13.5px;color:var(--dim);margin-top:8px"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <h2>My Targets</h2>
+        <div class="body">
+          <label for="targetIn">Players you specifically want — tells you when to take them</label>
+          <input id="targetIn" list="playerList" placeholder="e.g. stroud" autocomplete="off"
+                 autocapitalize="off" autocorrect="off">
+          <button class="primary" id="targetAdd" style="margin-top:8px">Add target</button>
+          <div id="targetList" style="margin-top:10px"></div>
         </div>
       </div>
 
@@ -379,6 +401,7 @@ async function tick() {
   // Track which drafted players are mine, so the board can distinguish
   // "gone to someone else" from "on my roster".
   myNames = new Set((s.roster || []).map(p => p.name));
+  renderTargets(s.targets);
 
   $('roster').innerHTML = (s.roster && s.roster.length)
     ? s.roster.map(p => `<div class="roster-row"><span>${p.name}</span><span class="rp">${p.position} · ${p.team}</span></div>`).join('')
@@ -469,6 +492,50 @@ $('refreshBtn').onclick = async () => {
   $('manualMsg').textContent = '';
   tick();
 };
+
+function renderTargets(targets) {
+  if (!targets || !targets.length) {
+    $('targetList').innerHTML =
+      '<div style="color:var(--dim);font-size:13.5px">No targets set.</div>';
+    return;
+  }
+  const label = {
+    can_wait: 'CAN WAIT', likely_undrafted: 'NO RUSH', last_chance: 'LAST CHANCE',
+    reach_now: 'REACH NEEDED', not_ranked: 'STREAMABLE', gone: 'GONE',
+    no_picks_left: 'NO PICKS'
+  };
+  $('targetList').innerHTML = targets.map(t => `
+    <div class="tgt">
+      <div class="th">
+        <span class="tn">${t.name}</span>
+        ${t.pos ? `<span class="brk">${t.pos}${t.positional_rank} · #${t.board_rank}</span>` : ''}
+        <span class="vd ${t.verdict}">${label[t.verdict] || t.verdict}</span>
+        <span class="tx" data-t="${t.name.replace(/"/g,'&quot;')}">✕</span>
+      </div>
+      <div class="ta">${t.advice}</div>
+    </div>`).join('');
+
+  $('targetList').querySelectorAll('.tx').forEach(x => {
+    x.onclick = async () => {
+      await fetch('/api/target/' + encodeURIComponent(x.dataset.t), {method: 'DELETE'});
+      tick();
+    };
+  });
+}
+
+$('targetAdd').onclick = async () => {
+  const v = $('targetIn').value.trim();
+  if (!v) return;
+  const j = await (await fetch('/api/target/' + encodeURIComponent(v), {method: 'POST'})).json();
+  if (j.error) {
+    $('targetList').innerHTML =
+      `<div style="color:var(--bad);font-size:13.5px">${j.error}${j.candidates ? ': ' + j.candidates.join(', ') : ''}</div>`;
+  } else {
+    $('targetIn').value = '';
+  }
+  tick();
+};
+$('targetIn').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); $('targetAdd').click(); } };
 
 $('newsBtn').onclick = async () => {
   const btn = $('newsBtn'), out = $('newsOut');

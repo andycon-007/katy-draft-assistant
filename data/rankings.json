@@ -1,7 +1,7 @@
 {
   "meta": {
     "built_on": "2026-08-14",
-    "revised_on": "2026-08-15",
+    "revised_on": "2026-08-18",
     "season": 2026,
     "league": "Tigers of Katy Baseball (Yahoo #878541)",
     "format_basis": "STANDARD (non-PPR), 10-team, 1-QB",
@@ -117,7 +117,8 @@
         "Injury penalties are fixed rank shifts encoding added risk, not projections.",
         "Kickers and defenses are deliberately excluded; unlimited waivers make them streamable."
       ]
-    }
+    },
+    "note_on_dates": "Source lists were retrieved 2026-08-14/15; injury overlay and blend applied 2026-08-18."
   },
   "bye_weeks": {
     "KC": 5,

@@ -52,6 +52,7 @@ class DraftState:
     slot: int | None = None
     drafted: list[dict] = field(default_factory=list)  # {name, position, team, pick, team_key}
     my_team_key: str | None = None
+    targets: list[str] = field(default_factory=list)  # players you specifically want
 
     # ------------------------------------------------------------- derived
 
@@ -144,8 +145,128 @@ class DraftState:
         return 0.6
 
 
+# Roughly how many of each position actually get drafted in this league.
+# 10 teams, starters QB/WR/WR/RB/RB/TE/FLEX, 7 bench. Board rank alone badly
+# misprices QB and TE here: only one starts, so demand runs out long before the
+# board does. A QB ranked 156th overall is not "a late pick" — he is the 22nd QB
+# in a league that drafts about 13, i.e. likely undrafted.
+EXPECTED_DRAFTED_BY_POS = {
+    "QB": 13,   # 10 starters + a few backups
+    "TE": 14,   # 10 starters + a few streamers
+    "RB": 46,   # 20 starters + flex + heavy bench
+    "WR": 46,   # 20 starters + flex + heavy bench
+}
+
+# Players don't come off the board exactly at their rank. This is the slack used
+# when deciding whether waiting is safe.
+ADP_VARIANCE = 12
+
+
 def is_out_for_season(player: dict) -> bool:
     return (player.get("injury") or {}).get("status") == "out_for_season"
+
+
+def positional_rank(rankings: dict, player: dict) -> int:
+    same = [p for p in rankings["players"] if p.get("pos") == player.get("pos")]
+    same.sort(key=lambda p: p["rank"])
+    for i, p in enumerate(same, start=1):
+        if p["name"] == player["name"]:
+            return i
+    return len(same) + 1
+
+
+def analyze_target(rankings: dict, state: DraftState, name: str) -> dict:
+    """When, if ever, do you actually need to spend a pick on this player?
+
+    Answers the real question behind "should I reach": what is the latest pick of
+    mine at which this player is still plausibly available, and what does taking him
+    earlier cost.
+    """
+    key = normalize_name(name)
+    player = next(
+        (p for p in rankings["players"] if normalize_name(p["name"]) == key), None
+    )
+
+    if player is None:
+        return {
+            "name": name,
+            "on_board": False,
+            "verdict": "not_ranked",
+            "advice": (
+                "Not on the ranked board. Kickers and defenses are excluded deliberately — "
+                "with unlimited acquisitions and rolling waivers they are free to stream, "
+                "so they belong in your last round or not at all."
+            ),
+        }
+
+    if normalize_name(player["name"]) in state.drafted_keys:
+        return {
+            "name": player["name"], "on_board": True, "verdict": "gone",
+            "advice": "Already drafted.",
+        }
+
+    pos = player.get("pos", "")
+    pos_rank = positional_rank(rankings, player)
+    expected_drafted = EXPECTED_DRAFTED_BY_POS.get(pos, 40)
+    total_picks = state.teams * state.rounds
+    my_picks = [p for _, p in picks_for_slot(state.slot, state.teams, state.rounds)] if state.slot else []
+    remaining = [p for p in my_picks if p >= state.next_pick_number]
+
+    result = {
+        "name": player["name"], "on_board": True, "pos": pos,
+        "board_rank": player["rank"], "positional_rank": pos_rank,
+        "expected_drafted_at_pos": expected_drafted, "tier": player.get("tier"),
+    }
+
+    # Positional demand runs out before this player — nobody is competing for him.
+    if pos_rank > expected_drafted:
+        result.update(
+            verdict="likely_undrafted",
+            advice=(
+                f"{pos}{pos_rank} in a league that drafts roughly {expected_drafted} {pos}s. "
+                f"Very likely goes undrafted — you can take him with your final pick or add him "
+                f"off waivers. Spending an earlier pick buys you nothing."
+            ),
+        )
+        return result
+
+    # Otherwise: latest of my picks that is still safely ahead of his expected slot.
+    safe_by = player["rank"] - ADP_VARIANCE
+    safe_picks = [p for p in remaining if p <= safe_by]
+
+    if not remaining:
+        result.update(verdict="no_picks_left", advice="You have no picks remaining.")
+    elif safe_picks:
+        latest = max(safe_picks)
+        result["latest_safe_pick"] = latest
+        result["safe_picks"] = safe_picks
+        if latest == remaining[0]:
+            result.update(
+                verdict="last_chance",
+                advice=(
+                    f"Expected to go around #{player['rank']}. Your next pick (#{latest}) is the "
+                    f"last one that comfortably beats that — after this you are gambling on him falling."
+                ),
+            )
+        else:
+            result.update(
+                verdict="can_wait",
+                advice=(
+                    f"Expected to go around #{player['rank']}. You pick at "
+                    f"{', '.join('#' + str(p) for p in safe_picks)} before then, so there is no need "
+                    f"to take him at #{remaining[0]} — spend that on the best player available instead."
+                ),
+            )
+    else:
+        nxt = remaining[0]
+        result.update(
+            verdict="reach_now", next_pick=nxt,
+            advice=(
+                f"Expected to go around #{player['rank']}, which is ahead of your next pick (#{nxt}). "
+                f"Getting him means reaching, and you would be paying above market to do it."
+            ),
+        )
+    return result
 
 
 def available_players(rankings: dict, state: DraftState) -> list[dict]:

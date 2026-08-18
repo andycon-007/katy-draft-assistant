@@ -24,7 +24,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from .config import STATIC_DIR, Settings, load_league_settings, load_rankings
-from .draft_state import DraftState, normalize_name
+from .draft_state import DraftState, analyze_target, normalize_name
 from .recommend import Recommender
 
 MOCK_MODE = os.getenv("MOCK_MODE", "0") == "1"
@@ -256,6 +256,7 @@ async def status() -> JSONResponse:
             "recent_picks": state.drafted[-10:],
             "recommendations": recommendations,
             "news": _cache.get("news"),
+            "targets": [analyze_target(rankings, state, t) for t in state.targets],
         }
     )
 
@@ -385,6 +386,47 @@ async def undo_last() -> JSONResponse:
     removed = state.drafted.pop()
     _cache["computed_for_pick"] = None
     return JSONResponse({"ok": True, "removed": removed["name"]})
+
+
+@app.post("/api/target/{name}")
+async def add_target(name: str) -> JSONResponse:
+    """Add a player you specifically want, so timing advice is computed for him."""
+    key = normalize_name(name)
+    match = next(
+        (p for p in rankings["players"] if normalize_name(p["name"]) == key), None
+    )
+    if match is None:
+        partial = [p for p in rankings["players"] if key and key in normalize_name(p["name"])]
+        if len(partial) == 1:
+            match = partial[0]
+        elif len(partial) > 1:
+            return JSONResponse(
+                {"error": f"'{name}' matches {len(partial)} players", "candidates": [p["name"] for p in partial[:6]]},
+                status_code=409,
+            )
+
+    # Off-board targets (kickers, defenses) are allowed — analyze_target explains why
+    # they don't need a real pick, which is exactly the question being asked.
+    label = match["name"] if match else name
+    if label not in state.targets:
+        state.targets.append(label)
+    _cache["computed_for_pick"] = None
+    return JSONResponse({"ok": True, "targets": state.targets})
+
+
+@app.delete("/api/target/{name}")
+async def remove_target(name: str) -> JSONResponse:
+    key = normalize_name(name)
+    state.targets = [t for t in state.targets if normalize_name(t) != key]
+    _cache["computed_for_pick"] = None
+    return JSONResponse({"ok": True, "targets": state.targets})
+
+
+@app.get("/api/targets")
+async def list_targets() -> JSONResponse:
+    return JSONResponse(
+        [analyze_target(rankings, state, t) for t in state.targets]
+    )
 
 
 @app.post("/api/news")
