@@ -20,6 +20,7 @@
     --radius: 14px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { max-width: 100%; overflow-x: hidden; }
   body {
     margin: 0;
     background: var(--bg);
@@ -34,7 +35,10 @@
     border-bottom: 1px solid var(--line);
     padding: 12px 16px;
     display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    max-width: 100%;
   }
+  /* Long player names and error strings must wrap, never widen the page. */
+  .note, .why, .meta2, .banner, .empty { overflow-wrap: anywhere; }
   .pick-meta { font-size: 15px; color: var(--dim); }
   .pick-meta strong { color: var(--text); font-size: 19px; }
   .turn {

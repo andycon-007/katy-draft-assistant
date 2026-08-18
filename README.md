@@ -147,13 +147,32 @@ attribution must be added to `static/index.html` before using live Yahoo data.
 
 ## Pre-draft checklist
 
+- [x] Yahoo app registered; OAuth completed (token valid, but Fantasy scope denied)
+- [x] Tailscale installed on Mac mini and iPad, "Start at login" enabled
+- [x] iPad reaches the UI over Tailscale **from cellular**, not just home wifi
+- [x] Static fallback plan generated (`draft_plan.html`)
+- [ ] **`ANTHROPIC_API_KEY` set — the recommendation engine has never executed**
+- [ ] Full dry run: simulated draft end to end with a real key
+- [ ] Mac mini set to never sleep (`sudo pmset -a sleep 0 disksleep 0`)
+- [ ] Board extended past 100 if you want coverage beyond ~pick 10
 - [ ] Commissioner has scheduled the draft; Draft Type reads **Live Standard Draft**
-- [ ] Yahoo app registered, `.env` filled in, `scripts/authorize.py` run successfully
-- [ ] Mac mini set to **never sleep**; Tailscale running and set to start at login
-- [ ] iPad tested against the Tailscale address **from a different network** (cellular
-      hotspot), not just from home — this is the step people skip and regret
-- [ ] Full dry run against a Yahoo **mock draft** with a real API key
-- [ ] Board extended past 100 if you intend to use it beyond ~pick 10
+- [ ] Yahoo API access application submitted (optional — removes manual entry if approved)
+
+### iPad access
+
+Add the page to the Home Screen so the URL is fixed and Safari can't auto-upgrade it:
+
+```
+http://andys-mac-mini:8000      (or http://100.123.222.95:8000)
+```
+
+⚠️ **The `http://` prefix is required.** Typing a bare hostname makes Safari try HTTPS,
+which fails with "couldn't establish a secure connection" — the server speaks plain HTTP
+only. Adding to Home Screen pins the correct URL permanently.
+
+If it ever fails on the iPad despite Tailscale showing connected, check **iCloud Private
+Relay** (Settings → your name → iCloud) — it conflicts with Tailscale and produces the
+same TLS-shaped error.
 
 ## Layout
 
