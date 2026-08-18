@@ -72,9 +72,23 @@
 
   ol.recs { list-style: none; margin: 0; padding: 0; counter-reset: r; }
   ol.recs li {
-    counter-increment: r; display: grid; grid-template-columns: 40px 1fr;
+    counter-increment: r; display: grid; grid-template-columns: 40px 1fr auto;
     gap: 14px; padding: 14px 16px; border-bottom: 1px solid var(--line);
+    align-items: start;
   }
+  .acts { display: flex; flex-direction: column; gap: 7px; }
+  .act {
+    width: 46px; height: 40px; border-radius: 9px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--panel-2);
+    font-size: 17px; line-height: 1; display: flex; align-items: center; justify-content: center;
+  }
+  .act:disabled { opacity: .4; }
+  .act.gone { color: var(--dim); }
+  .act.gone:active { background: #3a1f22; color: #ff9e9e; }
+  /* Taking a player is the consequential action — give it standing colour, not just
+     an active state, so it is never confused with the dismiss button mid-draft. */
+  .act.take { color: var(--good); border-color: rgba(70,200,138,.45); }
+  .act.take:active { background: #1d3a2a; }
   ol.recs li:last-child { border-bottom: 0; }
   ol.recs li::before {
     content: counter(r); font-variant-numeric: tabular-nums;
@@ -345,7 +359,9 @@ function renderRecs(rec, watchShown) {
     return;
   }
   empty.hidden = true;
-  ol.innerHTML = rec.recommendations.map(r => `
+  ol.innerHTML = rec.recommendations.map(r => {
+    const n = r.name.replace(/"/g, '&quot;');
+    return `
     <li>
       <div>
         <div class="who">
@@ -359,7 +375,31 @@ function renderRecs(rec, watchShown) {
           <div class="risk">${r.risk}</div>
         </div>
       </div>
-    </li>`).join('');
+      <div class="acts">
+        <button class="act take" data-n="${n}" data-mine="1" title="I took this player">✓</button>
+        <button class="act gone" data-n="${n}" data-mine="0" title="Someone else took him">✕</button>
+      </div>
+    </li>`;
+  }).join('');
+
+  ol.querySelectorAll('.act').forEach(b => {
+    b.onclick = async () => {
+      // Disable the whole row's buttons: a double-tap during the ~30s recompute
+      // would otherwise fire twice, and the second is a silent no-op that looks
+      // like the first didn't register.
+      b.closest('li').querySelectorAll('.act').forEach(x => x.disabled = true);
+      const mine = b.dataset.mine === '1';
+      const j = await (await fetch(
+        `/api/manual-pick/${encodeURIComponent(b.dataset.n)}?mine=${mine}`,
+        {method: 'POST'}
+      )).json();
+      $('manualMsg').textContent = j.error
+        ? j.error
+        : (j.note || `${j.marked} → ${mine ? 'your roster' : 'off the board'}`);
+      await loadBoard();
+      tick();
+    };
+  });
 }
 
 async function tick() {
