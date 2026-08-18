@@ -176,9 +176,30 @@ def build_user_prompt(
     pool_txt = "\n".join(
         f"  - {p['name']} ({p['pos']}, {p['team']}, tier {p['tier']}, board rank {p['rank']}"
         + (f", falling {p['falls_by']} spots past rank" if p.get("falls_by") else "")
+        + (
+            " — RANKED WELL ABOVE THIS PICK AND NOT MARKED DRAFTED"
+            if p.get("verify_available")
+            else ""
+        )
         + ")"
         for p in pool
     )
+
+    verify = [p["name"] for p in pool if p.get("verify_available")]
+    verify_txt = ""
+    if verify:
+        verify_txt = f"""
+
+## Players who may or may not still be there
+
+These are ranked well ahead of the current pick but have not been entered as drafted:
+{', '.join(verify)}.
+
+Availability is taken from what the user has entered, not assumed from rank, so this
+means one of two things: a genuine slide — which is the most valuable thing that can
+happen in a draft and should be taken immediately — or a pick the user did not enter.
+Recommend them if they are the right pick, and say plainly in positional_watch that
+their availability is worth a glance before committing."""
 
     until = state.picks_until_my_turn()
     turn_txt = (
@@ -248,7 +269,7 @@ Unfilled starting slots: {state.unmet_starters() or 'none — all starters cover
 Last picks made:
 {recent_txt}
 
-{scarcity_txt}{targets_txt}
+{scarcity_txt}{verify_txt}{targets_txt}
 
 ## Candidates still available
 
@@ -382,6 +403,7 @@ class Recommender:
                     "bye": board.get("bye"),
                     "tier": board.get("tier"),
                     "board_rank": board.get("rank"),
+                    "verify_available": board.get("verify_available", False),
                 }
             )
 

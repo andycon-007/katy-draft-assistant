@@ -108,6 +108,7 @@
   .pos.WR { background: #1b3350; color: #74b6ff; }
   .pos.TE { background: #3d2f14; color: #f0c46b; }
   .pos.QB { background: #3a1f30; color: #ff9ec4; }
+  .pos.vfy { background: rgba(245,166,35,.18); color: var(--warn); }
   .why { margin-top: 5px; font-size: 15px; }
   .meta2 { margin-top: 6px; font-size: 13.5px; color: var(--dim); display: grid; gap: 3px; }
   .meta2 .ceil::before { content: "↑ "; color: var(--good); }
@@ -372,6 +373,7 @@ function renderRecs(rec, watchShown) {
           <span class="name">${r.name}</span>
           <span class="pos ${r.position}">${r.position}</span>
           <span class="pos">${r.team}</span>
+          ${r.verify_available ? '<span class="pos vfy">CHECK IF GONE</span>' : ''}
         </div>
         <div class="why">${r.why}</div>
         <div class="meta2">

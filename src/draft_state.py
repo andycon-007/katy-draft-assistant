@@ -302,20 +302,32 @@ def available_players(rankings: dict, state: DraftState) -> list[dict]:
 
 
 def candidate_pool(
-    rankings: dict, state: DraftState, pick_number: int, window: int = 30
+    rankings: dict,
+    state: DraftState,
+    pick_number: int,
+    window: int = 30,
+    assume_gone_above_pick: bool = False,
 ) -> list[dict]:
-    """Players plausibly available at `pick_number`, scored by upside x need.
+    """Players available at `pick_number`, scored by upside x need.
 
-    Board rank approximates consensus draft order, so anyone ranked far ahead of
-    this pick is likely gone. The window admits players who fall, which is where
-    most of the value in a draft actually comes from.
+    Availability comes from what you have actually entered as drafted — not from an
+    assumption that high-ranked players must be gone by now. That assumption is
+    tempting (it hides obviously-stale names when you fall behind on entry) but the
+    costs are lopsided: showing a player who is already gone costs one tap to
+    dismiss, while hiding a player who genuinely fell costs you the best value on
+    the board. Sliding elite players are the whole reason to watch a draft closely.
+
+    `assume_gone_above_pick=True` restores the old filtering for anyone who would
+    rather not see stale names, at that cost.
+
+    The upper bound is a different thing and stays on: it bounds how deep to look
+    for relevance at this pick, not who is still available.
     """
     available = available_players(rankings, state)
     pool = []
     for player in available:
         rank = player["rank"]
-        # Allow a small reach above the pick, and a wide window below it.
-        if rank < pick_number - 6:
+        if assume_gone_above_pick and rank < pick_number - 6:
             continue
         if rank > pick_number + window:
             continue
@@ -330,6 +342,9 @@ def candidate_pool(
                 "score": (upside + fall_bonus) * multiplier,
                 "need_multiplier": round(multiplier, 2),
                 "falls_by": max(0, rank - pick_number),
+                # Ranked well ahead of this pick and not marked drafted. Either a
+                # genuine slide worth pouncing on, or a pick you never entered.
+                "verify_available": rank < pick_number - 6,
             }
         )
     pool.sort(key=lambda p: p["score"], reverse=True)
