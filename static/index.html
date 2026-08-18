@@ -482,8 +482,13 @@ async function tick() {
   // Stale = the cached result predates the current board. Dim it and say so, so a
   // half-second glance can't mistake it for current advice.
   const stale = !!s.recommendations_stale;
+  const provisional = !!(s.recommendations && s.recommendations.provisional);
   $('staleNote').hidden = !stale;
-  $('recs').classList.toggle('stale', stale);
+  $('staleNote').textContent = provisional
+    ? 'Best available from the board — full analysis computing…'
+    : 'Recomputing for the current board…';
+  // Don't dim a provisional list: it is genuinely usable, just not model-reasoned.
+  $('recs').classList.toggle('stale', stale && !provisional);
 
   const rec = s.recommendations;
   $('rosterRead').hidden = !(rec && rec.roster_read);

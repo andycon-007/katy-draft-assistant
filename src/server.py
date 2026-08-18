@@ -27,6 +27,7 @@ from .config import STATIC_DIR, Settings, load_league_settings, load_rankings
 from .draft_state import (
     DraftState,
     analyze_target,
+    candidate_pool,
     normalize_name,
     positional_scarcity,
 )
@@ -238,14 +239,47 @@ def _fresh_recommendations() -> tuple[dict | None, bool]:
     """
     rec = _cache["recommendations"]
     stale = _cache["computed_for_pick"] != state.next_pick_number
-    if not rec or not rec.get("recommendations"):
-        return rec, stale
 
     taken = state.drafted_keys
-    filtered = [
-        r for r in rec["recommendations"] if normalize_name(r.get("name", "")) not in taken
-    ]
-    if len(filtered) != len(rec["recommendations"]):
+    filtered = []
+    if rec and rec.get("recommendations"):
+        filtered = [
+            r for r in rec["recommendations"] if normalize_name(r.get("name", "")) not in taken
+        ]
+
+    # A burst of picks can draft every name on the previous list, leaving nothing to
+    # show for the ~30s the model takes. Fall back to the board's own ordering, which
+    # is instant and needs no API call — a plain best-available list beats a blank
+    # panel while you are on the clock.
+    if not filtered:
+        pool = candidate_pool(rankings, state, state.next_pick_number)[:10]
+        if pool:
+            return (
+                {
+                    "roster_read": "",
+                    "positional_watch": "",
+                    "provisional": True,
+                    "recommendations": [
+                        {
+                            "name": p["name"],
+                            "position": p.get("pos", ""),
+                            "team": p.get("team", ""),
+                            "why": f"Board rank {p['rank']}, tier {p['tier']}"
+                            + (f" — {p['note']}" if p.get("note") else ""),
+                            "ceiling_case": "",
+                            "risk": "",
+                            "tier": p.get("tier"),
+                            "board_rank": p.get("rank"),
+                            "verify_available": p.get("verify_available", False),
+                        }
+                        for p in pool
+                    ],
+                },
+                stale,
+            )
+        return rec, stale
+
+    if rec and len(filtered) != len(rec["recommendations"]):
         rec = {**rec, "recommendations": filtered}
     return rec, stale
 
@@ -555,6 +589,20 @@ async def refresh_news() -> JSONResponse:
 @app.get("/api/news")
 async def last_news() -> JSONResponse:
     return JSONResponse(_cache.get("news") or {"summary": "", "updates": []})
+
+
+@app.post("/api/reset")
+async def reset_draft(keep_slot: bool = True) -> JSONResponse:
+    """Clear all draft state. For dry runs before the real thing."""
+    slot = state.slot if keep_slot else None
+    team = state.my_team_key if keep_slot else None
+    state.drafted.clear()
+    state.current_pick_override = None
+    state.slot = slot
+    state.my_team_key = team
+    _cache["computed_for_pick"] = None
+    _cache["recommendations"] = None
+    return JSONResponse({"ok": True, "slot": state.slot})
 
 
 @app.post("/api/refresh")
