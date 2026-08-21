@@ -31,6 +31,7 @@ from .draft_state import (
     analyze_target,
     candidate_pool,
     normalize_name,
+    picks_for_slot,
     positional_scarcity,
 )
 from .recommend import Recommender
@@ -43,8 +44,10 @@ MOCK_MODE = os.getenv("MOCK_MODE", "0") == "1"
 MANUAL_MODE = os.getenv("MANUAL_MODE", "0") == "1"
 
 # How close to your turn before full model reasoning is worth its ~30s and its cost.
-# Two picks ahead gives the call time to land before you are on the clock.
-RECOMPUTE_WITHIN = int(os.getenv("RECOMPUTE_WITHIN", "2"))
+# Four picks rather than two: at a live draft two picks can pass in under a minute,
+# which is not enough for a ~40s call to land before you are on the clock. Widening
+# costs nothing extra — the work is deduped per pick number, not per poll.
+RECOMPUTE_WITHIN = int(os.getenv("RECOMPUTE_WITHIN", "4"))
 
 settings = Settings.load()
 rankings = load_rankings()
@@ -329,6 +332,23 @@ def _fresh_recommendations() -> tuple[dict | None, bool]:
     return rec, stale
 
 
+def _roster_check() -> dict:
+    """How many picks you should own by now, versus how many are recorded.
+
+    A mis-tap of the take button instead of dismiss is silent: the player joins
+    your roster and every later recommendation is computed against a team you do
+    not have. Comparing against the snake schedule makes that visible immediately.
+    """
+    if state.slot is None:
+        return {"expected": None, "actual": len(state.my_roster()), "ok": True}
+    expected = sum(
+        1 for _, pk in picks_for_slot(state.slot, state.teams, state.rounds)
+        if pk < state.next_pick_number
+    )
+    actual = len(state.my_roster())
+    return {"expected": expected, "actual": actual, "ok": actual == expected}
+
+
 @app.get("/api/status")
 async def status() -> JSONResponse:
     until = state.picks_until_my_turn()
@@ -375,6 +395,7 @@ async def status() -> JSONResponse:
             },
             "roster": state.my_roster(),
             "position_counts": state.position_counts(),
+            "roster_check": _roster_check(),
             "unmet_starters": state.unmet_starters(),
             "recent_picks": state.drafted[-10:],
             "recommendations": recommendations,
