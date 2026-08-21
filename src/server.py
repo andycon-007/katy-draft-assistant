@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+import time
 import random
 import traceback
 from contextlib import asynccontextmanager
@@ -66,6 +67,12 @@ _cache: dict[str, Any] = {
     "poll_error": None,
     "connected": False,
     "news": None,
+    # Analysis health, surfaced so "is this working?" is a glance not a guess.
+    "computing": False,
+    "compute_started_at": None,
+    "last_success_at": None,
+    "last_error": None,
+    "consecutive_failures": 0,
 }
 _lock = asyncio.Lock()
 
@@ -153,11 +160,28 @@ async def mock_tick() -> None:
     _cache["connected"] = True
 
 
+def _short_error(exc: Exception) -> str:
+    """A one-line cause a human can act on, not a stack trace."""
+    text = str(exc)
+    if "credit balance is too low" in text:
+        return "Anthropic credit balance too low — add funds at console.anthropic.com"
+    if "rate_limit" in text or "429" in text:
+        return "Rate limited by the API — will retry"
+    if "authentication" in text.lower() or "401" in text:
+        return "API key rejected — check ANTHROPIC_API_KEY in .env"
+    if "Connection" in type(exc).__name__ or "Timeout" in type(exc).__name__:
+        return "Cannot reach the Anthropic API — check the network"
+    return f"{type(exc).__name__}: {text[:140]}"
+
+
 async def refresh_recommendations() -> None:
     """Recompute when the board has moved past what we last computed for."""
     pick = state.next_pick_number
     if _cache["computed_for_pick"] == pick:
         return
+
+    _cache["computing"] = True
+    _cache["compute_started_at"] = time.time()
     try:
         result = await asyncio.to_thread(recommender().recommend, state, pick, 10)
 
@@ -170,14 +194,20 @@ async def refresh_recommendations() -> None:
 
         _cache["recommendations"] = result
         _cache["computed_for_pick"] = pick
+        _cache["last_success_at"] = time.time()
+        _cache["last_error"] = None
+        _cache["consecutive_failures"] = 0
     except Exception as exc:  # noqa: BLE001
-        _cache["recommendations"] = {
-            "roster_read": "",
-            "positional_watch": f"Recommendation engine error: {exc}",
-            "recommendations": [],
-            "error": "engine",
-        }
+        # Record rather than replace. The provisional list still has to be served —
+        # it is the only usable thing on screen — so the error has to travel
+        # alongside it. An earlier version wrote the error into the recommendations
+        # payload, where the provisional fallback promptly discarded it, and every
+        # call could fail for minutes while the panel said "recomputing".
+        _cache["last_error"] = _short_error(exc)
+        _cache["consecutive_failures"] = _cache.get("consecutive_failures", 0) + 1
         traceback.print_exc()
+    finally:
+        _cache["computing"] = False
 
 
 async def poll_loop() -> None:
@@ -308,6 +338,24 @@ async def status() -> JSONResponse:
             "mock_mode": MOCK_MODE,
             "manual_mode": MANUAL_MODE,
             "recommendations_stale": stale,
+            "analysis": {
+                "computing": _cache.get("computing", False),
+                "elapsed": (
+                    round(time.time() - _cache["compute_started_at"], 1)
+                    if _cache.get("computing") and _cache.get("compute_started_at")
+                    else None
+                ),
+                "age": (
+                    round(time.time() - _cache["last_success_at"])
+                    if _cache.get("last_success_at") else None
+                ),
+                "error": _cache.get("last_error"),
+                "failures": _cache.get("consecutive_failures", 0),
+                "next_full_at": (
+                    None if state.slot is None
+                    else (state.my_upcoming_picks(1)[0][1] if state.my_upcoming_picks(1) else None)
+                ),
+            },
             "connected": _cache["connected"],
             "poll_error": _cache["poll_error"],
             "config_missing": settings.missing(),
