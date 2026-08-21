@@ -41,6 +41,10 @@ MOCK_MODE = os.getenv("MOCK_MODE", "0") == "1"
 # as they're announced and everything downstream works unchanged.
 MANUAL_MODE = os.getenv("MANUAL_MODE", "0") == "1"
 
+# How close to your turn before full model reasoning is worth its ~30s and its cost.
+# Two picks ahead gives the call time to land before you are on the clock.
+RECOMPUTE_WITHIN = int(os.getenv("RECOMPUTE_WITHIN", "2"))
+
 settings = Settings.load()
 rankings = load_rankings()
 league = load_league_settings()
@@ -189,13 +193,19 @@ async def poll_loop() -> None:
                     await poll_yahoo()
                 _cache["poll_error"] = None
 
-            # Recompute whenever the board has moved. An earlier version only did this
-            # within 4 picks of your turn to save tokens, but that left the panel
-            # showing a stale recommendation — captioned "recomputing" — for the rest
-            # of the round, which is worse than the cost it saved. computed_for_pick
-            # dedupes, so this is one call per distinct pick, not per poll.
-            async with _lock:
-                await refresh_recommendations()
+            # Only spend a model call when the answer is for you. Recomputing on every
+            # pick meant a 30-40s wait after each opponent's selection — 160 calls for
+            # a draft in which about 16 mattered. Between your turns the provisional
+            # board-order list carries the panel, and it is current within milliseconds.
+            #
+            # An earlier version of this gate was removed because it left a stale list
+            # on screen captioned "recomputing"; that is fixed by serving provisional
+            # whenever the cache is behind, so the gate is safe to restore.
+            until = state.picks_until_my_turn()
+            near_turn = state.slot is None or until is None or until <= RECOMPUTE_WITHIN
+            if near_turn or _cache.pop("force_recompute", False):
+                async with _lock:
+                    await refresh_recommendations()
 
         except Exception as exc:  # noqa: BLE001
             _cache["poll_error"] = str(exc)
@@ -246,15 +256,16 @@ def _fresh_recommendations() -> tuple[dict | None, bool]:
 
     taken = state.drafted_keys
     filtered = []
-    if rec and rec.get("recommendations"):
+    if rec and rec.get("recommendations") and not stale:
         filtered = [
             r for r in rec["recommendations"] if normalize_name(r.get("name", "")) not in taken
         ]
 
-    # A burst of picks can draft every name on the previous list, leaving nothing to
-    # show for the ~30s the model takes. Fall back to the board's own ordering, which
-    # is instant and needs no API call — a plain best-available list beats a blank
-    # panel while you are on the clock.
+    # Whenever the cached reasoning predates the current board, show the board's own
+    # ordering instead. It is computed locally in microseconds and is always current,
+    # whereas the cached list is up to 40 seconds behind — and a stale list that still
+    # mostly validates is more misleading than an honestly provisional one, because
+    # nothing on screen tells you which entries have gone quietly wrong.
     if not filtered:
         pool = candidate_pool(rankings, state, state.next_pick_number)[:10]
         if pool:
@@ -613,6 +624,7 @@ async def reset_draft(keep_slot: bool = True) -> JSONResponse:
 
 @app.post("/api/refresh")
 async def force_refresh() -> JSONResponse:
+    """Force full model reasoning now, regardless of distance from your turn."""
     async with _lock:
         _cache["computed_for_pick"] = None
         await refresh_recommendations()
