@@ -50,7 +50,9 @@ def measured_points(league: dict) -> dict[str, dict]:
     sc = league["scoring"]
     rec_per_yd = 1.0 / sc["receiving"]["yards_per_point"]
     rush_per_yd = 1.0 / sc["rushing"]["yards_per_point"]
+    pass_per_yd = 1.0 / sc["passing"]["yards_per_point"]
     rec_td, rush_td = sc["receiving"]["touchdown"], sc["rushing"]["touchdown"]
+    pass_td, interception = sc["passing"]["touchdown"], sc["passing"]["interception"]
     per_rec = sc["receiving"]["reception"]
 
     out: dict[str, dict] = {}
@@ -58,7 +60,10 @@ def measured_points(league: dict) -> dict[str, dict]:
     def ensure(name, pos):
         key = normalize_name(name)
         if key not in out:
-            out[key] = {"name": name, "pos": pos, "points": 0.0, "saw_rush": False, "saw_rec": False}
+            out[key] = {
+                "name": name, "pos": pos, "points": 0.0,
+                "saw_rush": False, "saw_rec": False, "saw_pass": False,
+            }
         return out[key]
 
     for name, pos, _team, rec, yds, td in stats.get("receiving", []):
@@ -76,12 +81,29 @@ def measured_points(league: dict) -> dict[str, dict]:
         p["points"] += yds * rec_per_yd + td * rec_td + rec * per_rec
         p["saw_rec"] = True
 
+    # Quarterbacks. Passing is the bulk; rushing is what separates the top tier in a
+    # format paying 6 for rushing scores and only 4 for passing ones.
+    for name, _team, yds, td, ints in stats.get("passing", []):
+        p = ensure(name, "QB")
+        p["points"] += yds * pass_per_yd + td * pass_td + ints * interception
+        p["saw_pass"] = True
+
+    for name, yds, td in stats.get("qb_rushing", []):
+        p = ensure(name, "QB")
+        p["points"] += yds * rush_per_yd + td * rush_td
+        p["saw_rush"] = True
+
     # The source tables are top-N per category, so a back who missed the rushing
     # table has a receiving-only total that looks like a collapse rather than a gap
     # in coverage. Scoring that as real is worse than having no data: it invents
-    # underperformers. Only trust a running back's total if his rushing was observed.
+    # underperformers. Require the category that carries each position's production.
     for p in out.values():
-        p["complete"] = p["saw_rush"] if p["pos"] == "RB" else p["saw_rec"]
+        if p["pos"] == "RB":
+            p["complete"] = p["saw_rush"]
+        elif p["pos"] == "QB":
+            p["complete"] = p["saw_pass"]
+        else:
+            p["complete"] = p["saw_rec"]
 
     return {k: p for k, p in out.items() if p["complete"]}
 
@@ -90,43 +112,42 @@ SMOOTH_WINDOW = 5
 
 
 def _fit_curves(rankings: dict, measured: dict) -> dict[str, list[tuple[int, float]]]:
-    """Per position: a smoothed curve of expected points by positional board rank.
+    """Per position: the 2025 *finishing* distribution — what the Nth best scorer made.
 
-    Indexed by 2026 board position, not 2025 finish — the curve has to be keyed on
-    the thing we look players up with.
+    This is deliberately NOT indexed by 2026 board rank. An earlier version was, and
+    it conflated two different things: the structural shape of a position (what does
+    the 4th-best receiver score in a season — stable year over year) with individual
+    noise (what did the specific players ranked there happen to do last year —
+    volatile). Justin Jefferson's down 2025 sat at WR4 and dragged the top of the WR
+    curve down, depressing the valuation of everyone near that rank including himself.
 
-    Smoothing is the point, not a nicety. A curve threaded exactly through each
-    observed player returns that player's own season when you query his rank, which
-    makes the estimate a tautology and the measured-vs-estimated gap identically
-    zero. A rolling mean over neighbouring ranks gives what we actually want: what a
-    typical player at this rank scored. Then enforce non-increasing, since a later
-    board rank should never imply more points.
+    Sorting by points instead answers the structural question cleanly. The curve
+    describes the position; the 2026 board decides which player occupies which slot on
+    it. So a player whose 2025 was weak but who is ranked WR4 for 2026 is valued as a
+    WR4 scorer, and his bad season no longer bends the curve under him.
+
+    Light smoothing still applies: with ~25 observations a single outlier season would
+    otherwise put a visible step in the curve.
     """
     curves: dict[str, list[tuple[int, float]]] = {}
     for pos in ("QB", "RB", "WR", "TE"):
-        board_pos = sorted(
-            (p for p in rankings["players"] if p.get("pos") == pos),
-            key=lambda p: p["rank"],
+        finishes = sorted(
+            (m["points"] for m in measured.values() if m["pos"] == pos), reverse=True
         )
-        observed = []
-        for i, p in enumerate(board_pos, start=1):
-            m = measured.get(normalize_name(p["name"]))
-            if m:
-                observed.append((i, m["points"]))
-
-        if len(observed) < 3:
-            curves[pos] = observed
+        if len(finishes) < 3:
+            curves[pos] = [(i + 1, v) for i, v in enumerate(finishes)]
             continue
 
         smoothed = []
-        for idx, (rank, _) in enumerate(observed):
+        for idx in range(len(finishes)):
             lo = max(0, idx - SMOOTH_WINDOW // 2)
-            hi = min(len(observed), lo + SMOOTH_WINDOW)
+            hi = min(len(finishes), lo + SMOOTH_WINDOW)
             lo = max(0, hi - SMOOTH_WINDOW)
-            window = [pts for _, pts in observed[lo:hi]]
-            smoothed.append((rank, sum(window) / len(window)))
+            window = finishes[lo:hi]
+            smoothed.append((idx + 1, sum(window) / len(window)))
 
-        # Enforce monotonic non-increasing.
+        # Sorted input is already descending; smoothing can only introduce tiny
+        # inversions, so clamp to be safe.
         for i in range(1, len(smoothed)):
             if smoothed[i][1] > smoothed[i - 1][1]:
                 smoothed[i] = (smoothed[i][0], smoothed[i - 1][1])

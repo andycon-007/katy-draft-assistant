@@ -408,8 +408,10 @@ def positional_scarcity(
         }
 
         if next_pick is None:
-            row.update(drop_off=0, drop_off_ranks=0, best_at_next_pick=None,
-                       note="No further picks.")
+            # Draft over, or slot unset. Nothing to lose by waiting because there is
+            # no waiting left — report zero rather than null so the UI shows a number.
+            row.update(drop_off=0, drop_off_ranks=0, drop_off_points=0.0,
+                       best_at_next_pick=None, note="No further picks.")
             rows.append(row)
             continue
 
