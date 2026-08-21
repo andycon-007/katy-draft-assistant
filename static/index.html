@@ -132,6 +132,11 @@
   .row { display: flex; gap: 8px; }
   .row > * { flex: 1; }
 
+  .scarcity-head {
+    padding: 9px 16px 0; font-size: 12px; color: var(--dim);
+    letter-spacing: .03em;
+  }
+  .scarcity-head b { color: var(--text); font-weight: 650; }
   .scarcity {
     display: flex; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--line);
     overflow-x: auto; -webkit-overflow-scrolling: touch;
@@ -143,6 +148,8 @@
   .sc .scp { font-size: 12px; font-weight: 700; letter-spacing: .04em; }
   .sc .scd { font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; margin: 1px 0; }
   .sc .scn { font-size: 11px; color: var(--dim); overflow-wrap: anywhere; }
+  .sc .sct { font-size: 10px; color: var(--dim); opacity: .75; margin-top: 2px;
+             font-variant-numeric: tabular-nums; }
   .sc.urgent { border-color: rgba(255,107,107,.55); background: rgba(255,107,107,.10); }
   .sc.urgent .scd { color: var(--bad); }
   .sc.soon   { border-color: rgba(245,166,35,.5); background: rgba(245,166,35,.09); }
@@ -221,6 +228,7 @@
   <div class="grid">
     <div class="card">
       <h2>Recommendations</h2>
+      <div id="scarcityHead" class="scarcity-head"></div>
       <div id="scarcity" class="scarcity"></div>
       <div class="note stale" id="staleNote" hidden>Recomputing for the current board…</div>
       <div class="note read" id="rosterRead" hidden></div>
@@ -434,9 +442,11 @@ async function tick() {
   if (d.slot == null) { t.className = 'turn'; t.textContent = 'Set your slot'; }
   else if (d.is_my_turn) { t.className = 'turn now'; t.textContent = "YOU'RE UP"; }
   else if (d.picks_until_my_turn != null && d.picks_until_my_turn <= 3) {
-    t.className = 'turn soon'; t.textContent = `${d.picks_until_my_turn} picks away`;
+    const n = d.picks_until_my_turn;
+    t.className = 'turn soon'; t.textContent = `${n} pick${n === 1 ? '' : 's'} away`;
   } else if (d.picks_until_my_turn != null) {
-    t.className = 'turn'; t.textContent = `${d.picks_until_my_turn} picks away`;
+    const n = d.picks_until_my_turn;
+    t.className = 'turn'; t.textContent = `${n} pick${n === 1 ? '' : 's'} away`;
   } else { t.className = 'turn'; t.textContent = 'Draft complete'; }
 
   const counts = s.position_counts || {}, unmet = s.unmet_starters || {};
@@ -448,7 +458,7 @@ async function tick() {
   // "gone to someone else" from "on my roster".
   myNames = new Set((s.roster || []).map(p => p.name));
   renderTargets(s.targets);
-  renderScarcity(s.scarcity);
+  renderScarcity(s.scarcity, d);
 
   $('roster').innerHTML = (s.roster && s.roster.length)
     ? s.roster.map(p => `<div class="roster-row"><span>${p.name}</span><span class="rp">${p.position} · ${p.team}</span></div>`).join('')
@@ -596,8 +606,23 @@ $('refreshBtn').onclick = async () => {
   tick();
 };
 
-function renderScarcity(rows) {
-  if (!rows || !rows.length) { $('scarcity').innerHTML = ''; return; }
+function renderScarcity(rows, d) {
+  if (!rows || !rows.length) {
+    $('scarcity').innerHTML = ''; $('scarcityHead').innerHTML = ''; return;
+  }
+
+  // The drop-off is measured to your NEXT pick, and without saying so "−0 pts"
+  // reads as "this position is permanently flat" when it often just means
+  // "nothing happens in the next thirty seconds".
+  const upcoming = (d && d.upcoming) || [];
+  const target = upcoming.length ? upcoming[0][1] : null;
+  const gap = (target != null && d) ? target - d.next_pick : null;
+  $('scarcityHead').innerHTML = target == null
+    ? 'Cost of waiting — set your draft slot to enable'
+    : (gap === 0
+        ? "You're on the clock — cost of waiting until your <b>next</b> turn:"
+        : `Cost of waiting until your next pick, <b>#${target}</b> ` +
+          `(${gap} pick${gap === 1 ? '' : 's'} away):`);
   $('scarcity').innerHTML = rows.map(r => {
     const pts = r.drop_off_points;
     const usingPts = pts !== null && pts !== undefined;
@@ -614,6 +639,7 @@ function renderScarcity(rows) {
       <div class="scp">${r.pos}${need}</div>
       <div class="scd">${val}</div>
       <div class="scn">${r.best_now}</div>
+      ${target != null ? `<div class="sct">by #${target}</div>` : ''}
     </div>`;
   }).join('');
 }
